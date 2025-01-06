@@ -1,4 +1,4 @@
-package com
+package com.ktor
 
 import io.ktor.server.application.*
 

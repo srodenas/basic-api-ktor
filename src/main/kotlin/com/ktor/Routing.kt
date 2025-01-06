@@ -1,11 +1,9 @@
-package com
+package com.ktor
 
 import com.srodenas.data.models.Employee
 import com.srodenas.data.models.Salary
-import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*
-import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
@@ -20,10 +18,19 @@ fun Application.configureRouting() {
         get("/employee"){
             call.respond(
                 listOf(
-                    Employee("Santi", "A software developer", Salary.High),
-                    Employee("Sonia", "A project manager", Salary.Medium),
-                    Employee("Guille", "A designer", Salary.Low),
-                    Employee("Diego", "A data analyst", Salary.Medium)
+                    Employee("Sonia", "23456789B", "A project manager", Salary.Medium),
+                    Employee("Guille", "34567890C", "A designer", Salary.Low),
+                    Employee("Diego", "45678901D", "A data analyst", Salary.Medium),
+                    Employee("José", "56789012E", "A backend developer", Salary.High),
+                    Employee("María", "67890123F", "A UX/UI designer", Salary.Medium),
+                    Employee("Carlos", "78901234G", "A mobile developer", Salary.Low),
+                    Employee("Laura", "89012345H", "A product owner", Salary.Medium),
+                    Employee("Luis", "90123456I", "A DevOps engineer", Salary.High),
+                    Employee("Ana", "01234567J", "A frontend developer", Salary.Medium),
+                    Employee("Pablo", "11223344K", "A QA engineer", Salary.Low),
+                    Employee("Carmen", "22334455L", "A scrum master", Salary.Medium),
+                    Employee("Javier", "33445566M", "A technical writer", Salary.Low),
+                    Employee("Marta", "44556677N", "An HR specialist", Salary.Medium)
                 )
             )
         }

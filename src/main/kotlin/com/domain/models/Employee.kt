@@ -9,6 +9,7 @@ enum class Salary {
 @Serializable
 data class Employee(
     val name : String,
+    val dni : String,
     val description: String,
     val salary: Salary
 )
