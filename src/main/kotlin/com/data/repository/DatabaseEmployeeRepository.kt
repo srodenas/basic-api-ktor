@@ -17,7 +17,7 @@ class DatabaseEmployeeRepository : EmployeeInterface {
         TODO("Not yet implemented")
     }
 
-    override fun getEmployeeByIde(id: String): Employee ? {
+    override fun getEmployeeByDni(id: String): Employee ? {
         TODO("Not yet implemented")
     }
 

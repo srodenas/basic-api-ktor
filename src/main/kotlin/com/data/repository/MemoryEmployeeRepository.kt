@@ -25,11 +25,11 @@ class MemoryEmployeeRepository : EmployeeInterface {
     }
 
 
-    override fun getEmployeeByIde(id: String): Employee ?  = EmployeeData.listEmployee.filter { it.dni == id}.firstOrNull()
+    override fun getEmployeeByDni(id: String): Employee ?  = EmployeeData.listEmployee.filter { it.dni == id}.firstOrNull()
 
 
     override fun postEmployee(employee: Employee) : Boolean{
-        val emp = getEmployeeByIde(employee.dni)
+        val emp = getEmployeeByDni(employee.dni)
         return if (emp!= null) {
             false
         } else{

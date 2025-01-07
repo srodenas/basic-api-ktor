@@ -11,7 +11,7 @@ interface EmployeeInterface {
     fun getEmployeeByName ( name : String) : List<Employee>
 
     //Debe ser nullable, por si no existe.
-    fun getEmployeeByIde (dni: String) : Employee ?
+    fun getEmployeeByDni (dni: String) : Employee ?
 
     fun postEmployee(employee: Employee) : Boolean
 

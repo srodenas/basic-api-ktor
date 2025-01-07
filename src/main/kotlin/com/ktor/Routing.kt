@@ -1,38 +1,71 @@
 package com.ktor
 
+import com.domain.usecase.ProviderUseCase
 import com.srodenas.data.models.Employee
 import com.srodenas.data.models.Salary
+import io.ktor.http.*
+import io.ktor.serialization.*
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Application.configureRouting() {
     routing {
+        /*
+        ktor evalua los endpoint por orden.
+         */
+
         get("/") {
             call.respondText("Hello World!")
         }
 
 
 
+        /*
+        Ruta que me devuelve toda la lista de empleados
+         */
         get("/employee"){
-            call.respond(
-                listOf(
-                    Employee("Sonia", "23456789B", "A project manager", Salary.Medium),
-                    Employee("Guille", "34567890C", "A designer", Salary.Low),
-                    Employee("Diego", "45678901D", "A data analyst", Salary.Medium),
-                    Employee("José", "56789012E", "A backend developer", Salary.High),
-                    Employee("María", "67890123F", "A UX/UI designer", Salary.Medium),
-                    Employee("Carlos", "78901234G", "A mobile developer", Salary.Low),
-                    Employee("Laura", "89012345H", "A product owner", Salary.Medium),
-                    Employee("Luis", "90123456I", "A DevOps engineer", Salary.High),
-                    Employee("Ana", "01234567J", "A frontend developer", Salary.Medium),
-                    Employee("Pablo", "11223344K", "A QA engineer", Salary.Low),
-                    Employee("Carmen", "22334455L", "A scrum master", Salary.Medium),
-                    Employee("Javier", "33445566M", "A technical writer", Salary.Low),
-                    Employee("Marta", "44556677N", "An HR specialist", Salary.Medium)
-                )
-            )
+
+            val employees = ProviderUseCase.getAllEmployees()  //Ya tengo todos los empleados.
+            call.respond(employees)
+
+        }
+
+        get("/employee/{employeeDni}") {
+
+            //Comprobamos si se ha pasado el dni por parámetro
+            val employeeDni = call.parameters["employeeDni"]
+            if (employeeDni == null){
+                call.respond(HttpStatusCode.BadRequest, "Debes pasar el dni a buscar") //Montamos una respuesta con código 400.
+                return@get  //finalizamos en endpoint y mandamos inmediantamente la respuesta.
+            }
+
+            val employee = ProviderUseCase.getEmployeeByDni(employeeDni)
+            if (employee ==null){
+                call.respond(HttpStatusCode.NotFound,"Empleado no encontrado")  //Montamos un 404 de no encontrado.
+                return@get //finalizamos en endpoint y mandamos inmediantamente la respuesta.
+            }
+            call.respond(employee)  //mandamos el empleado como respuesta al cliente.
+        }
+
+
+        post("/employee"){
+            try{
+                val emp = call.receive<Employee>()  //Leemos el cuerpo de la solicitud como un objeto Employee
+                val res = ProviderUseCase.insertEmployee(emp)
+                if (! res){
+                    call.respond(HttpStatusCode.Conflict, "El empleado no pudo insertarse. Puede que ya exista")
+                    return@post //aunque no es necesario, es buena práctica ponerlo para no olvidarlo, pero no hay más lógica.
+                }
+                call.respond(HttpStatusCode.Created, "Se ha insertado correctamente con dni =  ${emp.dni}")
+            } catch (e : IllegalStateException){
+                call.respond(HttpStatusCode.BadRequest)
+            } catch (e:JsonConvertException){
+                call.respond(HttpStatusCode.BadRequest," Problemas en la conversión json")
+            }
+
         }
 
 
