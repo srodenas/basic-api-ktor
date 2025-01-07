@@ -13,7 +13,7 @@ object EmployeeData  {
         Employee("Sonia", "23456789B", "A project manager", Salary.Medium),
         Employee("Guille", "34567890C", "A designer", Salary.Low),
         Employee("Diego", "45678901D", "A data analyst", Salary.Medium),
-        Employee("José", "56789012E", "A backend developer", Salary.High),
+        Employee("Santiago", "23344334Z", "A backend developer", Salary.High),
         Employee("María", "67890123F", "A UX/UI designer", Salary.Medium),
         Employee("Carlos", "78901234G", "A mobile developer", Salary.Low),
         Employee("Laura", "89012345H", "A product owner", Salary.Medium),
