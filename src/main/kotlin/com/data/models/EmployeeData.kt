@@ -1,7 +1,7 @@
 package com.data.models
 
-import com.srodenas.data.models.Employee
-import com.srodenas.data.models.Salary
+import com.domain.models.Employee
+import com.domain.models.Salary
 
 
 /*

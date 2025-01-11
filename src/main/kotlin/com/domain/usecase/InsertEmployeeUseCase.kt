@@ -1,9 +1,9 @@
 package com.domain.usecase
 
+import com.domain.models.Employee
 import com.domain.repository.EmployeeInterface
-import com.srodenas.data.models.Employee
 
-class InsertEmployee  (val repository : EmployeeInterface){
+class InsertEmployeeUseCase  (val repository : EmployeeInterface){
 
     var employee : Employee? = null
 

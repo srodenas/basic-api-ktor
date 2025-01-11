@@ -1,9 +1,9 @@
 package com.domain.usecase
 
+import com.domain.models.Employee
 import com.domain.repository.EmployeeInterface
-import com.srodenas.data.models.Employee
 
-class GetAllEmployees (val repository : EmployeeInterface){
+class GetAllEmployeesUseCase (val repository : EmployeeInterface){
 
     operator fun invoke(): List<Employee> = repository.getAllEmployee()
 }

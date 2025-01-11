@@ -1,8 +1,10 @@
 package com.data.repository
 
+import com.domain.models.Employee
+import com.domain.models.Salary
+import com.domain.models.UpdateEmployee
 import com.domain.repository.EmployeeInterface
-import com.srodenas.data.models.Employee
-import com.srodenas.data.models.Salary
+
 
 class DatabaseEmployeeRepository : EmployeeInterface {
     override fun getAllEmployee(): List<Employee> {
@@ -25,7 +27,7 @@ class DatabaseEmployeeRepository : EmployeeInterface {
         TODO("Not yet implemented")
     }
 
-    override fun updateEmployee(employee: Employee) : Boolean{
+    override fun updateEmployee(employee: UpdateEmployee, dni:String) : Boolean{
         TODO("Not yet implemented")
     }
 

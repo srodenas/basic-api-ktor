@@ -1,9 +1,10 @@
 package com.data.repository
 
 import com.data.models.EmployeeData
+import com.domain.models.Employee
+import com.domain.models.Salary
+import com.domain.models.UpdateEmployee
 import com.domain.repository.EmployeeInterface
-import com.srodenas.data.models.Employee
-import com.srodenas.data.models.Salary
 
 /*
 Marca el acceso a datos dependiendo del contrato. Será la implementación de acceso a Memoria.
@@ -39,14 +40,21 @@ class MemoryEmployeeRepository : EmployeeInterface {
     }
 
 
-    override fun updateEmployee(employee: Employee) : Boolean{
-        val index = EmployeeData.listEmployee.indexOfFirst { it.dni == employee.dni }
+    /*
+    Buscamos el empleado a modificar y sobreescribimos el mismo objeto con los datos modificados.
+    Para ello, utilizamos el método copy que tiene cualquier objeto.
+    Os recuerdo que el copy, vuelve a referenciar al objeto, por eso hay que sobreescribirlo en la lista.
+     */
+    override fun updateEmployee(updateEmployee: UpdateEmployee, dni:String) : Boolean{
+        val index = EmployeeData.listEmployee.indexOfFirst { it.dni == dni }
         return if (index != -1) {
-            EmployeeData.listEmployee[index] = EmployeeData.listEmployee[index].copy(
-                name = employee.name,
-                description = employee.description,
-                salary = employee.salary
-            )
+            val originEmployee = EmployeeData.listEmployee[index]
+            EmployeeData.listEmployee[index] =  originEmployee
+                .copy(
+                    name = updateEmployee.name ?: originEmployee.name,
+                    description = updateEmployee.description ?: originEmployee.description,
+                    salary = updateEmployee.salary ?: originEmployee.salary
+                )
             true
         }
         else{

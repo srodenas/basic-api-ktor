@@ -1,5 +1,4 @@
-package com.srodenas.data.models
-
+package com.domain.models
 import kotlinx.serialization.Serializable
 
 enum class Salary {

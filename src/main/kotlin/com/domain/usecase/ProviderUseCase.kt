@@ -1,7 +1,9 @@
 package com.domain.usecase
 
 import com.data.repository.MemoryEmployeeRepository
-import com.srodenas.data.models.Employee
+import com.domain.models.*
+
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -11,18 +13,19 @@ object ProviderUseCase {
     val logger: Logger = LoggerFactory.getLogger("EmployeeUseCaseLogger")
 
     //Aquí tengo todos los casos de uso.
-    private val getAllEmployeesUseCase = GetAllEmployees(repository)
-    private val getEmployeByDniUseCase = GetEmployeByDni(repository)
-    private val updateEmployeeUseCase = UpdateEmployee(repository)
-    private val insertEmployeeUseCase = InsertEmployee(repository)
-    private val deleteEmployeUseCase = DeleteEmploye(repository)
+    private val getAllEmployeesUseCase = GetAllEmployeesUseCase(repository)
+    private val getEmployeByDniUseCase = GetEmployeByDniUseCase(repository)
+    private val updateEmployeeUseCase = UpdateEmployeeUseCase(repository)
+    private val insertEmployeeUseCase = InsertEmployeeUseCase(repository)
+    private val deleteEmployeUseCase = DeleteEmployeUseCase(repository)
+
 
 
     fun getAllEmployees() = getAllEmployeesUseCase()  //Lo invoco, como si fuera una función.
 
 
 
-    fun getEmployeeByDni(dni : String) : Employee ? {
+    fun getEmployeeByDni(dni : String) : Employee? {
         if (dni.isNullOrBlank()){
             logger.warn("El dni está vacío. No podemos buscar un empleado")
             return null
@@ -52,6 +55,18 @@ object ProviderUseCase {
         }else{
             true
         }
+    }
+
+    fun updateEmployee(updateEmployee: UpdateEmployee?, dni : String) : Boolean{
+        if (updateEmployee == null){
+            logger.warn("No existen datos del empleado a actualizar")
+            return false
+        }
+
+        updateEmployeeUseCase.updateEmployee = updateEmployee
+        updateEmployeeUseCase.dni = dni
+        updateEmployeeUseCase()
+        return true  //todo
     }
 
 }

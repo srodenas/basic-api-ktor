@@ -1,6 +1,8 @@
 package com.domain.repository
 
-import com.srodenas.data.models.*
+import com.domain.models.Employee
+import com.domain.models.Salary
+import com.domain.models.UpdateEmployee
 
 
 interface EmployeeInterface {
@@ -15,7 +17,7 @@ interface EmployeeInterface {
 
     fun postEmployee(employee: Employee) : Boolean
 
-    fun updateEmployee(employee: Employee) : Boolean
+    fun updateEmployee(employee: UpdateEmployee, dni:String) : Boolean
 
     fun deleteEmployee(dni : String) : Boolean
 }

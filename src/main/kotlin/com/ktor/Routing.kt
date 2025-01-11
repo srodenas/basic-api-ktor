@@ -1,8 +1,9 @@
 package com.ktor
 
+import com.domain.models.Employee
+import com.domain.models.UpdateEmployee
 import com.domain.usecase.ProviderUseCase
-import com.srodenas.data.models.Employee
-import com.srodenas.data.models.Salary
+import com.domain.usecase.ProviderUseCase.logger
 import io.ktor.http.*
 import io.ktor.serialization.*
 import io.ktor.server.application.*
@@ -24,15 +25,29 @@ fun Application.configureRouting() {
 
 
         /*
-        Ruta que me devuelve toda la lista de empleados
+        Ruta que me devuelve toda la lista de empleados o a partir del parámetro de consulta (query) pasado url?dni
          */
         get("/employee"){
 
-            val employees = ProviderUseCase.getAllEmployees()  //Ya tengo todos los empleados.
-            call.respond(employees)
-
+            val employeeDni = call.request.queryParameters["dni"]
+            logger.warn("El Dni tiene de valor $employeeDni")
+            if (employeeDni != null) {
+                val employee = ProviderUseCase.getEmployeeByDni(employeeDni)
+                if (employee == null) {
+                    call.respond(HttpStatusCode.NotFound, "Empleado no encontrado")
+                    return@get
+                }else{
+                    call.respond(employee)
+                }
+            }else{
+                val employees = ProviderUseCase.getAllEmployees()  //Ya tengo todos los empleados.
+                call.respond(employees)
+            }
         }
 
+        /*
+        Endpoint que no es recomendable, porque no se debe utilizar parámetros de url para filtrar. Para eso están los de consulta.
+         */
         get("/employee/{employeeDni}") {
 
             //Comprobamos si se ha pasado el dni por parámetro
@@ -51,6 +66,8 @@ fun Application.configureRouting() {
         }
 
 
+
+
         post("/employee"){
             try{
                 val emp = call.receive<Employee>()  //Leemos el cuerpo de la solicitud como un objeto Employee
@@ -61,11 +78,33 @@ fun Application.configureRouting() {
                 }
                 call.respond(HttpStatusCode.Created, "Se ha insertado correctamente con dni =  ${emp.dni}")
             } catch (e : IllegalStateException){
-                call.respond(HttpStatusCode.BadRequest)
+                call.respond(HttpStatusCode.BadRequest, "Error en el formato de envío de datos o lectura del cuerpo.")
             } catch (e:JsonConvertException){
                 call.respond(HttpStatusCode.BadRequest," Problemas en la conversión json")
             }
 
+        }
+
+        patch("/employee") {
+            try{
+                val dni = call.parameters["employeeDni"]
+                dni?.let{
+                    val updateEmployee = call.receive<UpdateEmployee>()
+                    val res = ProviderUseCase.updateEmployee(updateEmployee, dni)
+                    if (! res){
+                        call.respond(HttpStatusCode.Conflict, "El empleado no pudo modificarse. Puede que no exista")
+                        return@patch //aunque no es necesario, es buena práctica ponerlo para no olvidarlo, pero no hay más lógica.
+                    }
+                    call.respond(HttpStatusCode.Created, "Se ha actualizado correctamente con dni =  ${dni}")
+                }?: run{
+                    call.respond(HttpStatusCode.BadRequest,"Empleado no encontrado")
+                    return@patch //aunque no es necesario, es buena práctica ponerlo para no olvidarlo, pero no hay más lógica.
+                }
+            } catch (e: IllegalStateException){
+                call.respond(HttpStatusCode.BadRequest,"Error en el formado de envío de los datos o lectura del cuerpo.")
+            } catch (e: JsonConvertException){
+                call.respond(HttpStatusCode.BadRequest,"Error en el formado de json")
+            }
         }
 
 
