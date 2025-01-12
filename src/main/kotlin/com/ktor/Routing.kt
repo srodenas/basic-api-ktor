@@ -1,6 +1,7 @@
 package com.ktor
 
 import com.domain.models.Employee
+import com.domain.models.Salary
 import com.domain.models.UpdateEmployee
 import com.domain.usecase.ProviderUseCase
 import com.domain.usecase.ProviderUseCase.logger
@@ -23,9 +24,11 @@ fun Application.configureRouting() {
         }
 
 
-
         /*
-        Ruta que me devuelve toda la lista de empleados o a partir del parámetro de consulta (query) pasado url?dni
+        En esta ruta, comprobamos diferentes parámetros:
+        1.- Que no tenga ningún parámetro. Devuelve todos los empleados sin filtro.
+        2.- Que le pasemos el dni por query. Devuelve ese empleado . Lo tengo de ejemplo, ya que no debería utilizar una query para un recurso específico.
+        3.- Que le pasemos el salario por query. Devuelve todos los empleados que tienen dicho salario.
          */
         get("/employee"){
 
@@ -35,11 +38,26 @@ fun Application.configureRouting() {
                 val employee = ProviderUseCase.getEmployeeByDni(employeeDni)
                 if (employee == null) {
                     call.respond(HttpStatusCode.NotFound, "Empleado no encontrado")
-                    return@get
-                }else{
+                } else {
                     call.respond(employee)
                 }
-            }else{
+                return@get
+            }
+
+            //comprobamos si hemos pasado el parámetro salary
+            val salary = call.request.queryParameters["salary"]
+            logger.warn("El salario pasado es $salary")
+            if (salary != null) {
+                try{
+                    val s = salary.uppercase()
+                    logger.warn("salario seleccionado: ${Salary.valueOf(s)}")
+                    val employees = ProviderUseCase.getEmployeeBySalary(Salary.valueOf(salary.uppercase()))  //Salary.valueOf(String.upperecase()) convierte un string a Enum
+                    call.respond(employees)
+                }catch (e: IllegalArgumentException){
+                    call.respond(HttpStatusCode.BadRequest, "El salario no corresponde con los tipos utilizados")
+                }
+
+            }else{ //No hemos pasado ninguna query
                 val employees = ProviderUseCase.getAllEmployees()  //Ya tengo todos los empleados.
                 call.respond(employees)
             }
@@ -106,6 +124,7 @@ fun Application.configureRouting() {
                 call.respond(HttpStatusCode.BadRequest,"Error en el formado de json")
             }
         }
+
 
 
 

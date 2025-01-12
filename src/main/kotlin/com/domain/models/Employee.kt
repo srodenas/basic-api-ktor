@@ -2,7 +2,7 @@ package com.domain.models
 import kotlinx.serialization.Serializable
 
 enum class Salary {
-    Low, Medium, High
+    LOW, MEDIUM, HIGH
 }
 
 @Serializable

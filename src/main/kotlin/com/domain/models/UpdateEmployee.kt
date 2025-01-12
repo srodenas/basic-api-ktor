@@ -8,8 +8,8 @@ patch
  */
 @Serializable
 data class UpdateEmployee (
-    val dni: Int?,
-    val name: String?,
-    val description: String?,
-    val salary: Salary?
+    val dni: Int? = null,
+    val name: String? = null,
+    val description: String? = null,
+    val salary: Salary? = null
 )

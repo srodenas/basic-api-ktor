@@ -17,6 +17,7 @@ object ProviderUseCase {
     private val getEmployeByDniUseCase = GetEmployeByDniUseCase(repository)
     private val updateEmployeeUseCase = UpdateEmployeeUseCase(repository)
     private val insertEmployeeUseCase = InsertEmployeeUseCase(repository)
+    private val getEmployeBySalaryUseCase = GetEmployeesBySalaryUseCase(repository)
     private val deleteEmployeUseCase = DeleteEmployeUseCase(repository)
 
 
@@ -65,8 +66,12 @@ object ProviderUseCase {
 
         updateEmployeeUseCase.updateEmployee = updateEmployee
         updateEmployeeUseCase.dni = dni
-        updateEmployeeUseCase()
-        return true  //todo
+        return updateEmployeeUseCase()
+    }
+
+    fun getEmployeeBySalary(salary: Salary) : List<Employee> {
+        getEmployeBySalaryUseCase.filter = salary
+        return getEmployeBySalaryUseCase()
     }
 
 }
