@@ -11,25 +11,25 @@ Marca el acceso a datos dependiendo del contrato. Será la implementación de ac
  */
 class MemoryEmployeeRepository : EmployeeInterface {
 
-    override fun getAllEmployee(): List<Employee> {
+    override suspend fun getAllEmployee(): List<Employee> {
         return EmployeeData.listEmployee
     }
 
 
-    override fun getEmployeeBySalary(salary: Salary): List <Employee> {
+    override suspend fun getEmployeeBySalary(salary: Salary): List <Employee> {
        return EmployeeData.listEmployee.filter { it.salary == salary }
     }
 
 
-    override fun getEmployeeByName(name: String): List <Employee> {
+    override suspend fun getEmployeeByName(name: String): List <Employee> {
         return EmployeeData.listEmployee.filter { it.name == name }
     }
 
 
-    override fun getEmployeeByDni(id: String): Employee ?  = EmployeeData.listEmployee.filter { it.dni == id}.firstOrNull()
+    override suspend fun getEmployeeByDni(id: String): Employee ?  = EmployeeData.listEmployee.filter { it.dni == id}.firstOrNull()
 
 
-    override fun postEmployee(employee: Employee) : Boolean{
+    override suspend fun postEmployee(employee: Employee) : Boolean{
         val emp = getEmployeeByDni(employee.dni)
         return if (emp!= null) {
             false
@@ -45,7 +45,7 @@ class MemoryEmployeeRepository : EmployeeInterface {
     Para ello, utilizamos el método copy que tiene cualquier objeto.
     Os recuerdo que el copy, vuelve a referenciar al objeto, por eso hay que sobreescribirlo en la lista.
      */
-    override fun updateEmployee(updateEmployee: UpdateEmployee, dni:String) : Boolean{
+    override suspend fun updateEmployee(updateEmployee: UpdateEmployee, dni:String) : Boolean{
         val index = EmployeeData.listEmployee.indexOfFirst { it.dni == dni }
         return if (index != -1) {
             val originEmployee = EmployeeData.listEmployee[index]
@@ -62,7 +62,7 @@ class MemoryEmployeeRepository : EmployeeInterface {
         }
     }
 
-    override fun deleteEmployee(dni: String): Boolean {
+    override suspend fun deleteEmployee(dni: String): Boolean {
         val index = EmployeeData.listEmployee.indexOfFirst { it.dni == dni }
         return if (index != -1) {
             EmployeeData.listEmployee.removeAt(index)

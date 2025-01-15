@@ -6,31 +6,31 @@ import com.domain.models.UpdateEmployee
 import com.domain.repository.EmployeeInterface
 
 class PersistenceEmployeeRepository: EmployeeInterface{
-    override fun getAllEmployee(): List<Employee> {
+    override suspend fun getAllEmployee(): List<Employee> {
         TODO("Not yet implemented")
     }
 
-    override fun getEmployeeBySalary(salary: Salary): List<Employee> {
+    override suspend fun getEmployeeBySalary(salary: Salary): List<Employee> {
         TODO("Not yet implemented")
     }
 
-    override fun getEmployeeByName(name: String): List<Employee> {
+    override suspend fun getEmployeeByName(name: String): List<Employee> {
         TODO("Not yet implemented")
     }
 
-    override fun getEmployeeByDni(dni: String): Employee? {
+    override suspend fun getEmployeeByDni(dni: String): Employee? {
         TODO("Not yet implemented")
     }
 
-    override fun postEmployee(employee: Employee): Boolean {
+    override  suspend fun postEmployee(employee: Employee): Boolean {
         TODO("Not yet implemented")
     }
 
-    override fun updateEmployee(employee: UpdateEmployee, dni: String): Boolean {
+    override suspend  fun updateEmployee(employee: UpdateEmployee, dni: String): Boolean {
         TODO("Not yet implemented")
     }
 
-    override fun deleteEmployee(dni: String): Boolean {
+    override suspend fun deleteEmployee(dni: String): Boolean {
         TODO("Not yet implemented")
     }
 }

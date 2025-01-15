@@ -5,7 +5,7 @@ import com.domain.repository.EmployeeInterface
 class DeleteEmployeUseCase (val repository : EmployeeInterface){
     var dni : String? = null
 
-    operator fun invoke() : Boolean {
+    suspend operator fun invoke() : Boolean {
         return if (dni == null) {
             false
         }else{

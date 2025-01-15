@@ -5,5 +5,5 @@ import com.domain.repository.EmployeeInterface
 
 class GetAllEmployeesUseCase (val repository : EmployeeInterface){
 
-    operator fun invoke(): List<Employee> = repository.getAllEmployee()
+    suspend operator fun invoke(): List<Employee> = repository.getAllEmployee()
 }

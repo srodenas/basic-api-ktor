@@ -7,7 +7,7 @@ import com.domain.repository.EmployeeInterface
 class GetEmployeesBySalaryUseCase (val repository : EmployeeInterface) {
     var filter : Salary? =null
 
-    operator fun invoke() : List<Employee> {
+    suspend operator fun invoke() : List<Employee> {
         return filter?.let {
              repository.getEmployeeBySalary(it)
         }?:run{

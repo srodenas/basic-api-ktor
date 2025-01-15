@@ -31,4 +31,14 @@ dependencies {
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.kotlin.test.junit)
     implementation(libs.exposed.dao)
+
+    implementation(libs.mariadb)  // Usando la versión desde el archivo libs.versions.toml
+    implementation(libs.exposedjdbc)  // Usando la versión desde el archivo libs.versions.toml
+
+
+
+    // MariaDB Driver
+   // implementation("org.mariadb.jdbc:mariadb-java-client:2.7.3")
+   // implementation("org.jetbrains.exposed:exposed-jdbc:0.56.0")
+
 }

@@ -8,7 +8,7 @@ class UpdateEmployeeUseCase (val repository : EmployeeInterface){
     var updateEmployee: UpdateEmployee? = null
     var dni: String? = null
 
-    operator fun invoke() : Boolean {
+    suspend operator fun invoke() : Boolean {
         return if (updateEmployee == null || dni == null) {
             false
         }else{

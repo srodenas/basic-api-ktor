@@ -7,7 +7,7 @@ class InsertEmployeeUseCase  (val repository : EmployeeInterface){
 
     var employee : Employee? = null
 
-    operator fun invoke() : Boolean {
+    suspend operator fun invoke() : Boolean {
         /*
         Si devuelve null, es que ya existe el empleado
          */

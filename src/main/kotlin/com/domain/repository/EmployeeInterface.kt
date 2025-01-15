@@ -4,20 +4,24 @@ import com.domain.models.Employee
 import com.domain.models.Salary
 import com.domain.models.UpdateEmployee
 
+/*
+Como vamos a lanzar consultas a la BBDD, deben hacerse por medio de corrutinas.
+Cuando desde una corrutina ejecuto un método, éste tiene que estar definido como suspend.
+ */
 
 interface EmployeeInterface {
-    fun getAllEmployee () : List <Employee>
+    suspend fun getAllEmployee () : List <Employee>
 
-    fun getEmployeeBySalary ( salary: Salary) : List<Employee>
+    suspend fun getEmployeeBySalary ( salary: Salary) : List<Employee>
 
-    fun getEmployeeByName ( name : String) : List<Employee>
+    suspend fun getEmployeeByName ( name : String) : List<Employee>
 
     //Debe ser nullable, por si no existe.
-    fun getEmployeeByDni (dni: String) : Employee ?
+    suspend fun getEmployeeByDni (dni: String) : Employee ?
 
-    fun postEmployee(employee: Employee) : Boolean
+    suspend fun postEmployee(employee: Employee) : Boolean
 
-    fun updateEmployee(employee: UpdateEmployee, dni:String) : Boolean
+    suspend fun updateEmployee(employee: UpdateEmployee, dni:String) : Boolean
 
-    fun deleteEmployee(dni : String) : Boolean
+    suspend fun deleteEmployee(dni : String) : Boolean
 }

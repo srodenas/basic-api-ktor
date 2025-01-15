@@ -22,11 +22,11 @@ object ProviderUseCase {
 
 
 
-    fun getAllEmployees() = getAllEmployeesUseCase()  //Lo invoco, como si fuera una función.
+    suspend fun getAllEmployees() = getAllEmployeesUseCase()  //Lo invoco, como si fuera una función.
 
 
 
-    fun getEmployeeByDni(dni : String) : Employee? {
+    suspend fun getEmployeeByDni(dni : String) : Employee? {
         if (dni.isNullOrBlank()){
             logger.warn("El dni está vacío. No podemos buscar un empleado")
             return null
@@ -43,7 +43,7 @@ object ProviderUseCase {
 
 
 
-    fun insertEmployee(employee: Employee?) : Boolean{
+    suspend fun insertEmployee(employee: Employee?) : Boolean{
         if (employee == null){
             logger.warn( "No existen datos del empleado a insertar")
             return false
@@ -58,7 +58,7 @@ object ProviderUseCase {
         }
     }
 
-    fun updateEmployee(updateEmployee: UpdateEmployee?, dni : String) : Boolean{
+    suspend fun updateEmployee(updateEmployee: UpdateEmployee?, dni : String) : Boolean{
         if (updateEmployee == null){
             logger.warn("No existen datos del empleado a actualizar")
             return false
@@ -69,12 +69,12 @@ object ProviderUseCase {
         return updateEmployeeUseCase()
     }
 
-    fun getEmployeeBySalary(salary: Salary) : List<Employee> {
+    suspend fun getEmployeeBySalary(salary: Salary) : List<Employee> {
         getEmployeBySalaryUseCase.filter = salary
         return getEmployeBySalaryUseCase()
     }
 
-    fun deleteEmployee(dni : String) : Boolean{
+    suspend fun deleteEmployee(dni : String) : Boolean{
         deleteEmployeUseCase.dni = dni
         return deleteEmployeUseCase()
     }
