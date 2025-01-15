@@ -103,7 +103,7 @@ fun Application.configureRouting() {
 
         }
 
-        patch("/employee") {
+        patch("/employee/{employeeDni}") {
             try{
                 val dni = call.parameters["employeeDni"]
                 dni?.let{
@@ -115,7 +115,7 @@ fun Application.configureRouting() {
                     }
                     call.respond(HttpStatusCode.Created, "Se ha actualizado correctamente con dni =  ${dni}")
                 }?: run{
-                    call.respond(HttpStatusCode.BadRequest,"Empleado no encontrado")
+                    call.respond(HttpStatusCode.BadRequest,"Debes identificar el empleado")
                     return@patch //aunque no es necesario, es buena práctica ponerlo para no olvidarlo, pero no hay más lógica.
                 }
             } catch (e: IllegalStateException){
@@ -124,6 +124,24 @@ fun Application.configureRouting() {
                 call.respond(HttpStatusCode.BadRequest,"Error en el formado de json")
             }
         }
+
+
+        delete("/employee/{employeeDni}") {
+            val dni = call.parameters["employeeDni"]
+            logger.warn("Queremos borrar el empleado con dni $dni")
+            dni?.let{
+                val res = ProviderUseCase.deleteEmployee(dni)
+                if (! res){
+                    call.respond(HttpStatusCode.NotFound,"Empleado no encontrado para borrar")  //Montamos un 404 de no encontrado.
+                }else{
+                    call.respond(HttpStatusCode.NoContent,)
+                }
+            }?:run{
+                call.respond(HttpStatusCode.NoContent,"Debes identintificar el empleado")
+            }
+            return@delete
+        }
+
 
 
 

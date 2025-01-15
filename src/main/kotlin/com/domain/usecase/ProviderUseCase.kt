@@ -74,4 +74,9 @@ object ProviderUseCase {
         return getEmployeBySalaryUseCase()
     }
 
+    fun deleteEmployee(dni : String) : Boolean{
+        deleteEmployeUseCase.dni = dni
+        return deleteEmployeUseCase()
+    }
+
 }
