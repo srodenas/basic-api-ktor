@@ -30,10 +30,11 @@ dependencies {
   //  implementation(libs.ktor.server.config.yaml)
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.kotlin.test.junit)
-    implementation(libs.exposed.dao)
 
+    implementation(libs.exposed.dao)
     implementation(libs.mariadb)  // Usando la versión desde el archivo libs.versions.toml
     implementation(libs.exposedjdbc)  // Usando la versión desde el archivo libs.versions.toml
+   // implementation("org.mariadb.jdbc:mariadb-java-client:2.7.3")
 
 
 
