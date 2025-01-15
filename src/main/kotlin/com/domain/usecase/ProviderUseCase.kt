@@ -1,6 +1,6 @@
 package com.domain.usecase
 
-import com.data.repository.MemoryEmployeeRepository
+import com.data.repositorymemory.MemoryEmployeeRepository
 import com.domain.models.*
 
 
