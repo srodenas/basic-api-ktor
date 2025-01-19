@@ -1,6 +1,6 @@
-package com.data.repositorymemory
+package com.data.inmemory.repository
 
-import com.data.models.EmployeeData
+import com.data.inmemory.models.EmployeeData
 import com.domain.models.Employee
 import com.domain.models.Salary
 import com.domain.models.UpdateEmployee

@@ -1,4 +1,4 @@
-package com.data.models
+package com.data.inmemory.models
 
 import com.domain.models.Employee
 import com.domain.models.Salary

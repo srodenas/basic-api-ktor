@@ -1,4 +1,4 @@
-package com.data.repositorypersistence
+package com.data.persistence.repository
 
 import com.domain.models.Employee
 import com.domain.models.Salary
