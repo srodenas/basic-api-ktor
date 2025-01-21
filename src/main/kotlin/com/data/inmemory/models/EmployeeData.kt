@@ -8,21 +8,209 @@ import com.domain.models.Salary
 Simulamos nuestro repositorio de datos. Aquí tendremos la lista de datos.
 Lo tendremos para la incorporación de los test.
  */
-object EmployeeData  {
-    val listEmployee = mutableListOf<Employee> (
-        Employee("Sonia", "23456789B", "A project manager", Salary.MEDIUM),
-        Employee("Guille", "34567890C", "A designer", Salary.LOW),
-        Employee("Diego", "45678901D", "A data analyst", Salary.MEDIUM),
-        Employee("Santiago", "23344334Z", "A backend developer", Salary.HIGH),
-        Employee("María", "67890123F", "A UX/UI designer", Salary.MEDIUM),
-        Employee("Carlos", "78901234G", "A mobile developer", Salary.LOW),
-        Employee("Laura", "89012345H", "A product owner", Salary.MEDIUM),
-        Employee("Luis", "90123456I", "A DevOps engineer", Salary.HIGH),
-        Employee("Ana", "01234567J", "A frontend developer", Salary.MEDIUM),
-        Employee("Pablo", "11223344K", "A QA engineer", Salary.LOW),
-        Employee("Carmen", "22334455L", "A scrum master", Salary.MEDIUM),
-        Employee("Javier", "33445566M", "A technical writer", Salary.LOW),
-        Employee("Marta", "44556677N", "An HR specialist", Salary.MEDIUM)
+object  EmployeeData  {
+    val listEmployee=  mutableListOf  <Employee>(
+        Employee(
+            name = "Santi",
+            dni = "600123001",
+            description = "A project manager",
+            salary = Salary.HIGH,
+            phone = "600123001",
+            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            disponible = true,
+            token = ""
+        ),
+        Employee(
+            name = "Sonia",
+            dni = "600123002",
+            description = "A designer",
+            salary = Salary.MEDIUM,
+            phone = "600123002",
+            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            disponible = true,
+            token = ""
+        ),
+        Employee(
+            name = "Guille",
+            dni = "600123003",
+            description = "A data analyst",
+            salary = Salary.MEDIUM,
+            phone = "600123003",
+            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            disponible = false,
+            token = ""
+        ),
+        Employee(
+            name = "Diego",
+            dni = "600123004",
+            description = "A mobile developer",
+            salary = Salary.MEDIUM,
+            phone = "600123004",
+            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            disponible = true,
+            token = ""
+        ),
+        Employee(
+            name = "Luis Torres",
+            dni = "600123005",
+            description = "A frontend developer",
+            salary = Salary.LOW,
+            phone = "600123005",
+            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            disponible = true,
+            token = ""
+        ),
+        Employee(
+            name = "Lucía Martínez",
+            dni = "600123006",
+            description = "A backend developer",
+            salary = Salary.HIGH,
+            phone = "600123006",
+            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            disponible = false,
+            token = ""
+        ),
+        Employee(
+            name = "Miguel Romero",
+            dni = "600123007",
+            description = "A project manager",
+            salary = Salary.HIGH,
+            phone = "600123007",
+            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            disponible = true,
+            token = ""
+        ),
+        Employee(
+            name = "Sofía Jiménez",
+            dni = "600123008",
+            description = "A designer",
+            salary = Salary.MEDIUM,
+            phone = "600123008",
+            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            disponible = true,
+            token = ""
+        ),
+        Employee(
+            name = "Pedro Castillo",
+            dni = "600123009",
+            description = "A data analyst",
+            salary = Salary.LOW,
+            phone = "600123009",
+            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            disponible = false,
+            token = ""
+        ),
+        Employee(
+            name = "Laura Díaz",
+            dni = "600123010",
+            description = "A mobile developer",
+            salary = Salary.MEDIUM,
+            phone = "600123010",
+            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            disponible = true,
+            token = ""
+        ),
+        Employee(
+            name = "Diego Gómez",
+            dni = "600123011",
+            description = "A frontend developer",
+            salary = Salary.HIGH,
+            phone = "600123011",
+            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            disponible = true,
+            token = ""
+        ),
+        Employee(
+            name = "Natalia Ruiz",
+            dni = "600123012",
+            description = "A designer",
+            salary = Salary.MEDIUM,
+            phone = "600123012",
+            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            disponible = false,
+            token = ""
+        ),
+        Employee(
+            name = "Javier Moreno",
+            dni = "600123013",
+            description = "A data analyst",
+            salary = Salary.LOW,
+            phone = "600123013",
+            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            disponible = true,
+            token = ""
+        ),
+        Employee(
+            name = "Elena Vega",
+            dni = "600123014",
+            description = "A mobile developer",
+            salary = Salary.MEDIUM,
+            phone = "600123014",
+            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            disponible = true,
+            token = ""
+        ),
+        Employee(
+            name = "Ricardo Flores",
+            dni = "600123015",
+            description = "A frontend developer",
+            salary = Salary.HIGH,
+            phone = "600123015",
+            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            disponible = true,
+            token = ""
+        ),
+        Employee(
+            name = "Patricia Navarro",
+            dni = "600123016",
+            description = "A backend developer",
+            salary = Salary.LOW,
+            phone = "600123016",
+            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            disponible = true,
+            token = ""
+        ),
+        Employee(
+            name = "Fernando Paredes",
+            dni = "600123017",
+            description = "A project manager",
+            salary = Salary.HIGH,
+            phone = "600123017",
+            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            disponible = false,
+            token = ""
+        ),
+        Employee(
+            name = "Cristina Sáez",
+            dni = "600123018",
+            description = "A designer",
+            salary = Salary.MEDIUM,
+            phone = "600123018",
+            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            disponible = true,
+            token = ""
+        ),
+        Employee(
+            name = "Raúl Castro",
+            dni = "600123019",
+            description = "A data analyst",
+            salary = Salary.LOW,
+            phone = "600123019",
+            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            disponible = false,
+            token = ""
+        ),
+        Employee(
+            name = "Inés Sánchez",
+            dni = "600123020",
+            description = "A mobile developer",
+            salary = Salary.HIGH,
+            phone = "600123020",
+            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            disponible = true,
+            token = ""
+        )
     )
+
 
 }

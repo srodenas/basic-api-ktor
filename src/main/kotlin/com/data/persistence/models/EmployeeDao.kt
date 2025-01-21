@@ -1,5 +1,9 @@
 package com.data.persistence.models
 
+import org.jetbrains.exposed.dao.IntEntity
+import org.jetbrains.exposed.dao.IntEntityClass
+import org.jetbrains.exposed.dao.id.EntityID
+
 
 /*
 1.- Esta tabla, le dice a Exposed, como mappear los objetos kotlin/viceversa dentro la BBDD, Es por tanto
@@ -30,6 +34,22 @@ Lo volveré a resumir:
 
  ¿Qué hace companion object : EntityClass<Int, EmployeDAO>(EmployeeTable)   ?
  1.- Nuestra clase, adquirirá herencia de métodos estáticos a partir de otra clase.
+ 2.- Necesito mapear cada dato de la tabla, a un atributo de la clase EmployeeDao, porque un EmployeeDao lo utiliza Exposed para mapear el objeto
+ completo.
+
+ Objeto EmployeDato --> Exposed--> Registro en la Tabla
+ Objeto EmployeeDato <-- Exposed <-- Registtro en la Tabla
  */
-class EmployeeDao {
+class EmployeeDao (id : EntityID<Int>) :  IntEntity(id){
+    companion object : IntEntityClass<EmployeeDao>(EmployeeTable) //heredamos todos los métodos estáticos de acceso a los datos de la BBDD
+    var name by EmployeeTable.name //Lo necesitamos para mapear con el atributo correspondiente de la tabla
+    var dni by EmployeeTable.dni
+    var description by EmployeeTable.description
+    var salary by EmployeeTable.salary
+    var phone by EmployeeTable.phone
+    var urlImage by EmployeeTable.urlImage
+    var isActive by EmployeeTable.disponible
+    var token by EmployeeTable.token
+
+
 }

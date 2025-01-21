@@ -53,7 +53,13 @@ class MemoryEmployeeRepository : EmployeeInterface {
                 .copy(
                     name = updateEmployee.name ?: originEmployee.name,
                     description = updateEmployee.description ?: originEmployee.description,
-                    salary = updateEmployee.salary ?: originEmployee.salary
+                    salary = updateEmployee.salary ?: originEmployee.salary,
+                    phone = updateEmployee.phone ?: originEmployee.phone,
+                    url_image = updateEmployee.url_image ?: originEmployee.url_image,
+                    disponible = updateEmployee.disponible ?: originEmployee.disponible,
+                    token = updateEmployee.token ?: originEmployee.token,
+
+
                 )
             true
         }

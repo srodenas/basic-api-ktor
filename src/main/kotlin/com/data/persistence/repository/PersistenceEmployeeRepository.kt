@@ -1,13 +1,19 @@
 package com.data.persistence.repository
 
+import com.data.persistence.models.EmployeeDao
+import com.data.persistence.models.suspendTransaction
+import com.domain.mapping.EmploeeDaoToEmployee
 import com.domain.models.Employee
 import com.domain.models.Salary
 import com.domain.models.UpdateEmployee
 import com.domain.repository.EmployeeInterface
 
 class PersistenceEmployeeRepository: EmployeeInterface{
+
     override suspend fun getAllEmployee(): List<Employee> {
-        TODO("Not yet implemented")
+        return suspendTransaction {
+            EmployeeDao.all().map(::EmploeeDaoToEmployee)
+        }
     }
 
     override suspend fun getEmployeeBySalary(salary: Salary): List<Employee> {
