@@ -4,7 +4,7 @@ import com.data.persistence.models.EmployeeDao
 import com.domain.models.Employee
 import com.domain.models.Salary
 
-fun EmploeeDaoToEmployee (employeeDao : EmployeeDao) : Employee {
+fun EmployeeDaoToEmployee (employeeDao : EmployeeDao) : Employee {
 
         val e = Employee(
             employeeDao.name,

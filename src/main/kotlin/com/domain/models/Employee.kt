@@ -12,7 +12,7 @@ data class Employee(
     val description: String,
     val salary: Salary,
     val phone: String,
-    val url_image: String ? = null,
+    val urlImage: String ? = null,
     val disponible: Boolean = true,
     val token:String ? = null
 )

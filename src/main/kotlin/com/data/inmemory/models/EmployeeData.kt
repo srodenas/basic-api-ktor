@@ -16,7 +16,7 @@ object  EmployeeData  {
             description = "A project manager",
             salary = Salary.HIGH,
             phone = "600123001",
-            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            urlImage = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
             disponible = true,
             token = ""
         ),
@@ -26,7 +26,7 @@ object  EmployeeData  {
             description = "A designer",
             salary = Salary.MEDIUM,
             phone = "600123002",
-            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            urlImage = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
             disponible = true,
             token = ""
         ),
@@ -36,7 +36,7 @@ object  EmployeeData  {
             description = "A data analyst",
             salary = Salary.MEDIUM,
             phone = "600123003",
-            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            urlImage = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
             disponible = false,
             token = ""
         ),
@@ -46,7 +46,7 @@ object  EmployeeData  {
             description = "A mobile developer",
             salary = Salary.MEDIUM,
             phone = "600123004",
-            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            urlImage = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
             disponible = true,
             token = ""
         ),
@@ -56,7 +56,7 @@ object  EmployeeData  {
             description = "A frontend developer",
             salary = Salary.LOW,
             phone = "600123005",
-            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            urlImage = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
             disponible = true,
             token = ""
         ),
@@ -66,7 +66,7 @@ object  EmployeeData  {
             description = "A backend developer",
             salary = Salary.HIGH,
             phone = "600123006",
-            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            urlImage = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
             disponible = false,
             token = ""
         ),
@@ -76,7 +76,7 @@ object  EmployeeData  {
             description = "A project manager",
             salary = Salary.HIGH,
             phone = "600123007",
-            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            urlImage = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
             disponible = true,
             token = ""
         ),
@@ -86,7 +86,7 @@ object  EmployeeData  {
             description = "A designer",
             salary = Salary.MEDIUM,
             phone = "600123008",
-            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            urlImage = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
             disponible = true,
             token = ""
         ),
@@ -96,7 +96,7 @@ object  EmployeeData  {
             description = "A data analyst",
             salary = Salary.LOW,
             phone = "600123009",
-            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            urlImage = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
             disponible = false,
             token = ""
         ),
@@ -106,7 +106,7 @@ object  EmployeeData  {
             description = "A mobile developer",
             salary = Salary.MEDIUM,
             phone = "600123010",
-            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            urlImage = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
             disponible = true,
             token = ""
         ),
@@ -116,7 +116,7 @@ object  EmployeeData  {
             description = "A frontend developer",
             salary = Salary.HIGH,
             phone = "600123011",
-            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            urlImage = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
             disponible = true,
             token = ""
         ),
@@ -126,7 +126,7 @@ object  EmployeeData  {
             description = "A designer",
             salary = Salary.MEDIUM,
             phone = "600123012",
-            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            urlImage = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
             disponible = false,
             token = ""
         ),
@@ -136,7 +136,7 @@ object  EmployeeData  {
             description = "A data analyst",
             salary = Salary.LOW,
             phone = "600123013",
-            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            urlImage = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
             disponible = true,
             token = ""
         ),
@@ -146,7 +146,7 @@ object  EmployeeData  {
             description = "A mobile developer",
             salary = Salary.MEDIUM,
             phone = "600123014",
-            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            urlImage = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
             disponible = true,
             token = ""
         ),
@@ -156,7 +156,7 @@ object  EmployeeData  {
             description = "A frontend developer",
             salary = Salary.HIGH,
             phone = "600123015",
-            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            urlImage = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
             disponible = true,
             token = ""
         ),
@@ -166,7 +166,7 @@ object  EmployeeData  {
             description = "A backend developer",
             salary = Salary.LOW,
             phone = "600123016",
-            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            urlImage = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
             disponible = true,
             token = ""
         ),
@@ -176,7 +176,7 @@ object  EmployeeData  {
             description = "A project manager",
             salary = Salary.HIGH,
             phone = "600123017",
-            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            urlImage = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
             disponible = false,
             token = ""
         ),
@@ -186,7 +186,7 @@ object  EmployeeData  {
             description = "A designer",
             salary = Salary.MEDIUM,
             phone = "600123018",
-            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            urlImage = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
             disponible = true,
             token = ""
         ),
@@ -196,7 +196,7 @@ object  EmployeeData  {
             description = "A data analyst",
             salary = Salary.LOW,
             phone = "600123019",
-            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            urlImage = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
             disponible = false,
             token = ""
         ),
@@ -206,7 +206,7 @@ object  EmployeeData  {
             description = "A mobile developer",
             salary = Salary.HIGH,
             phone = "600123020",
-            url_image = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
+            urlImage = "https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg",
             disponible = true,
             token = ""
         )

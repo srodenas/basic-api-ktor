@@ -19,6 +19,8 @@ newSuspendendTransaction, acepta dos argumentos. Uno el scope donde queremos eje
 que representa la consulta.
 
 Recordamos, que para que la función trabaje con genéricos, hay que anteponerle al nombre <T>
+Kotlin, maneja los tipos y los genericos de manera implícita, es decir, T será lo que devuelva la lambda en
+donde sea invocada, que será List<Employee>
  */
 
 

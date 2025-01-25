@@ -13,7 +13,7 @@ data class UpdateEmployee (
     val description: String? = null,
     val salary: Salary? = null,
     val phone: String? = null,
-    val url_image: String ? = null,
+    val urlImage: String ? = null,
     val disponible: Boolean ? = true,
     val token:String ? = null
 )
