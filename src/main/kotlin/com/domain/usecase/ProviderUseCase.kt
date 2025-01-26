@@ -1,6 +1,7 @@
 package com.domain.usecase
 
 import com.data.inmemory.repository.MemoryEmployeeRepository
+import com.data.persistence.repository.PersistenceEmployeeRepository
 import com.domain.models.*
 
 
@@ -9,7 +10,8 @@ import org.slf4j.LoggerFactory
 
 object ProviderUseCase {
 
-    private val repository = MemoryEmployeeRepository()  //me creo el repositorio con todos los datos. Lo hago una sóla vez.
+   // private val repository = MemoryEmployeeRepository()  //me creo el repositorio con todos los datos. Lo hago una sóla vez.
+    private val repository = PersistenceEmployeeRepository()
     val logger: Logger = LoggerFactory.getLogger("EmployeeUseCaseLogger")
 
     //Aquí tengo todos los casos de uso.

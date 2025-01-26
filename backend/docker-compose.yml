@@ -30,3 +30,6 @@ services:
             MYSQL_ROOT_PASSWORD: santiago #contraseña del root
 volumes:
     persistent:
+
+#docker-compose down -v  para que borre también los volúmenes en el caso de que quiera volver a lanzarlo.
+#docker-compose up -d

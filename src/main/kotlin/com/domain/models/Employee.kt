@@ -9,6 +9,7 @@ enum class Salary {
 data class Employee(
     val name : String,
     val dni : String,
+    val password : String,
     val description: String,
     val salary: Salary,
     val phone: String,

@@ -13,7 +13,7 @@ import org.jetbrains.exposed.dao.id.IntIdTable
  */
 
 
-object  EmployeeTable: IntIdTable("employee") {
+object  EmployeeTable: IntIdTable("Employee") {
   //  val id = integer("id").autoIncrement()// Clave primaria
     val dni = varchar("dni", 20).uniqueIndex() // Campo único
     val name = varchar("name", 100) // Campo opcional

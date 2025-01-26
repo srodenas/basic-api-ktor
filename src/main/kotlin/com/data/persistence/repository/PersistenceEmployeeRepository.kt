@@ -85,15 +85,18 @@ class PersistenceEmployeeRepository: EmployeeInterface {
 
 
     override suspend fun postEmployee(employee: Employee): Boolean {
-
-        return if (getEmployeeByDni(employee.dni) != null) {
+        val em = getEmployeeByDni(employee.dni)
+        return if (em == null) {
             suspendTransaction {
                 EmployeeDao.new {
                     this.name = employee.name
                     this.dni = employee.dni
+                    this.password = employee.password
+                    this.description = employee.description
                     this.salary = employee.salary.toString()
                     this.phone = employee.phone
                     this.urlImage = employee.urlImage
+                    this.isActive = employee.disponible
                     this.token = employee.token
                 }
             }
@@ -107,17 +110,19 @@ class PersistenceEmployeeRepository: EmployeeInterface {
     override suspend fun updateEmployee(employee: UpdateEmployee, dni: String): Boolean {
         var num = 0
         try {
-            num = EmployeeTable
-                .update({ EmployeeTable.dni eq dni }) { stm ->
-                    employee.name?.let { stm[EmployeeTable.name] = it }
-                    employee.salary?.let { stm[EmployeeTable.salary] = it.toString() }
-                    employee.phone?.let { stm[EmployeeTable.phone] = it }
-                    employee.urlImage?.let { stm[EmployeeTable.urlImage] = it }
-                    employee.token?.let { stm[EmployeeTable.token] = it }
-                    employee.description?.let { stm[EmployeeTable.description] = it }
-                    employee.disponible?.let { stm[EmployeeTable.disponible] = it }
+            suspendTransaction {
+                num = EmployeeTable
+                    .update({ EmployeeTable.dni eq dni }) { stm ->
+                        employee.name?.let { stm[name] = it }
+                        employee.salary?.let { stm[salary] = it.toString() }
+                        employee.phone?.let { stm[phone] = it }
+                        employee.urlImage?.let { stm[urlImage] = it }
+                        employee.token?.let { stm[token] = it }
+                        employee.description?.let { stm[description] = it }
+                        employee.disponible?.let { stm[disponible] = it }
 
-                }
+                    }
+            }
 
         }catch (e:Exception){
             e.printStackTrace()

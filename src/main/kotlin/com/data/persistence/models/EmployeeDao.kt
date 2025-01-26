@@ -44,6 +44,7 @@ class EmployeeDao (id : EntityID<Int>) :  IntEntity(id){
     companion object : IntEntityClass<EmployeeDao>(EmployeeTable) //heredamos todos los métodos estáticos de acceso a los datos de la BBDD
     var name by EmployeeTable.name //Lo necesitamos para mapear con el atributo correspondiente de la tabla
     var dni by EmployeeTable.dni
+    var password by EmployeeTable.password
     var description by EmployeeTable.description
     var salary by EmployeeTable.salary
     var phone by EmployeeTable.phone
