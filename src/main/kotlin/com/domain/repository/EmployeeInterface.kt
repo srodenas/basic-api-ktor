@@ -24,4 +24,8 @@ interface EmployeeInterface {
     suspend fun updateEmployee(employee: UpdateEmployee, dni:String) : Boolean
 
     suspend fun deleteEmployee(dni : String) : Boolean
+
+    suspend fun login(dni: String, pass: String) : Boolean  //más adelante, implementaré con token
+
+    suspend fun register(employee: UpdateEmployee) : Employee? //Este será el que utilicemos para el registro
 }

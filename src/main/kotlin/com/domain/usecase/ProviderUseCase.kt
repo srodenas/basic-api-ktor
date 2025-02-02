@@ -21,6 +21,8 @@ object ProviderUseCase {
     private val insertEmployeeUseCase = InsertEmployeeUseCase(repository)
     private val getEmployeBySalaryUseCase = GetEmployeesBySalaryUseCase(repository)
     private val deleteEmployeUseCase = DeleteEmployeUseCase(repository)
+    private val loginUseCase = LoginUseCase(repository)
+    private val registerUseCase = RegisterUseCase(repository)
 
 
 
@@ -81,4 +83,18 @@ object ProviderUseCase {
         return deleteEmployeUseCase()
     }
 
+    suspend fun login(dni: String?, pass: String?)  = loginUseCase(dni, pass)
+
+    suspend fun register(employee : UpdateEmployee): Employee? {
+
+        return if(
+            employee.dni.isNullOrBlank() ||
+            employee.name.isNullOrBlank() ||
+            employee.password.isNullOrBlank()
+        )
+            null
+        else
+            registerUseCase(employee)
+
+    }
 }

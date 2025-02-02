@@ -8,12 +8,13 @@ patch
  */
 @Serializable
 data class UpdateEmployee (
-    val dni: Int? = null,
+    val dni: String? = null,
+    var password: String? = null,
     val name: String? = null,
-    val description: String? = null,
-    val salary: Salary? = null,
-    val phone: String? = null,
-    val urlImage: String ? = null,
-    val disponible: Boolean ? = true,
-    val token:String ? = null
+    var description: String? = null,
+    var salary: Salary? = null,
+    var phone: String? = null,
+    var urlImage: String ? = null,
+    var disponible: Boolean ? = true,
+    var token:String ? = null
 )

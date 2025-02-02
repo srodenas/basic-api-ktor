@@ -3,7 +3,9 @@ package com.data.persistence.repository
 import com.data.persistence.models.EmployeeDao
 import com.data.persistence.models.EmployeeTable
 import com.data.persistence.models.suspendTransaction
+import com.data.security.PasswordHash
 import com.domain.mapping.EmployeeDaoToEmployee
+import com.domain.mapping.toSalaryOrDefault
 import com.domain.models.Employee
 import com.domain.models.Salary
 import com.domain.models.UpdateEmployee
@@ -91,7 +93,7 @@ class PersistenceEmployeeRepository: EmployeeInterface {
                 EmployeeDao.new {
                     this.name = employee.name
                     this.dni = employee.dni
-                    this.password = employee.password
+                    this.password = PasswordHash.hash(employee.password) //hasheo la password.
                     this.description = employee.description
                     this.salary = employee.salary.toString()
                     this.phone = employee.phone
@@ -136,6 +138,39 @@ class PersistenceEmployeeRepository: EmployeeInterface {
         val num = EmployeeTable
             .deleteWhere { EmployeeTable.dni eq dni }
         num == 1
+    }
+
+    //método que a partir de
+    override suspend fun login(dni: String, pass: String): Boolean {
+        val employee = getEmployeeByDni(dni)?: return false
+
+        val posibleHash = PasswordHash.hash(pass) //hasheo la password del logueo
+        return posibleHash == employee.password //compruebo con la que hay en la BBDD
+    }
+
+    /*
+    Cambiaremos después algunas cosas en la bBDD
+
+
+     */
+    override suspend fun register(employee: UpdateEmployee): Employee? {
+        val em = getEmployeeByDni(employee.dni!!)?:return null
+
+            return suspendTransaction {
+                EmployeeDao.new {
+                    this.name = employee.name!! //es seguro.
+                    this.dni = employee.dni!!   //es seguro.
+                    this.password = PasswordHash.hash(employee.password!!) //hasheo la password.
+                    this.description = employee.description!!
+                    this.salary = employee.salary!!.toString()
+                    this.phone = employee.phone!!
+                    this.urlImage = employee.urlImage!!
+                    this.isActive = employee.disponible!!
+                    this.token = employee.token!!
+                }
+            }.let {
+               EmployeeDaoToEmployee(it) //hago directamente el mapping.
+            }
     }
 
 }

@@ -34,7 +34,7 @@ class MemoryEmployeeRepository : EmployeeInterface {
         return if (emp!= null) {
             false
         } else{
-                EmployeeData.listEmployee.addLast(employee)
+                EmployeeData.listEmployee.add(employee)
                 true
             }
     }
@@ -76,5 +76,13 @@ class MemoryEmployeeRepository : EmployeeInterface {
         }else{
             false
         }
+    }
+
+    override suspend fun login(dni: String, pass: String): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun register(employee: UpdateEmployee): Employee? {
+        TODO("Not yet implemented")
     }
 }
