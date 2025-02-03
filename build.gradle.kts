@@ -36,6 +36,7 @@ dependencies {
     implementation(libs.exposedjdbc)  // Usando la versión desde el archivo libs.versions.toml
    // implementation("org.mariadb.jdbc:mariadb-java-client:2.7.3")
 
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
 
 
     // MariaDB Driver
