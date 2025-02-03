@@ -99,7 +99,10 @@ fun Application.configureRouting() {
                 call.respond(HttpStatusCode.BadRequest, "Error en el formato de envío de datos o lectura del cuerpo.")
             } catch (e:JsonConvertException){
                 call.respond(HttpStatusCode.BadRequest," Problemas en la conversión json")
+            } catch (e: Exception){
+                call.respond(HttpStatusCode.BadRequest, "Error en los datos. Probablemente falten.")
             }
+
 
         }
 
@@ -175,9 +178,9 @@ fun Application.configureRouting() {
 
         }
 
+//Necesito hacer una carga de usuarios...... Para mas adelante.
+
     } //fin routing
-
-
 }
 
 

@@ -3,6 +3,7 @@ package com.domain.mapping
 import com.data.persistence.models.EmployeeDao
 import com.domain.models.Employee
 import com.domain.models.Salary
+import com.domain.models.UpdateEmployee
 
 fun EmployeeDaoToEmployee (employeeDao : EmployeeDao) : Employee {
 
@@ -20,6 +21,23 @@ fun EmployeeDaoToEmployee (employeeDao : EmployeeDao) : Employee {
         )
         return e
 }
+
+
+fun UpdateEmployeeToEmployee(employee: UpdateEmployee) : Employee {
+    var e = Employee(
+                    employee.name!!,
+                    employee.dni!!,
+                    employee.password!!,
+            employee.description?:"Sin determinar",
+                employee.salary?: Salary.LOW,
+                employee.phone?:"0000000",
+                employee.urlImage?:"",
+                employee.disponible?: true,
+                employee.token?: ""
+    )
+    return e
+}
+
 
 /*
 Extiendo la clase String con esta validación
