@@ -9,7 +9,8 @@ import com.domain.repository.EmployeeInterface
 class RegisterUseCase(val repository: EmployeeInterface) {
     operator suspend fun invoke(employee: UpdateEmployee): Employee? {
 
-        employee.password = PasswordHash.hash(employee.password!!) //hasheo la password.
+        employee.dni = employee.dni!!
+        employee.password = employee.password!!
         employee.description = employee.description?:"Sin determinar"
         employee.salary = employee.salary?: Salary.LOW
         employee.phone = employee.phone?:"0000000"

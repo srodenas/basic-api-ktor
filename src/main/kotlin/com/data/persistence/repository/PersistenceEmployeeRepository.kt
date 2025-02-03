@@ -144,8 +144,13 @@ class PersistenceEmployeeRepository: EmployeeInterface {
     override suspend fun login(dni: String, pass: String): Boolean {
         val employee = getEmployeeByDni(dni)?: return false
 
-        val posibleHash = PasswordHash.hash(pass) //hasheo la password del logueo
-        return posibleHash == employee.password //compruebo con la que hay en la BBDD
+        return try{
+            val posibleHash = PasswordHash.hash(pass) //hasheo la password del logueo
+            posibleHash == employee.password //compruebo con la que hay en la BBDD
+        }catch (e: Exception){
+            println("Error en la autenticación: ${e.localizedMessage}")
+            false
+        }
     }
 
     /*
@@ -154,9 +159,10 @@ class PersistenceEmployeeRepository: EmployeeInterface {
 
      */
     override suspend fun register(employee: UpdateEmployee): Employee? {
-        val em = getEmployeeByDni(employee.dni!!)?:return null
+        // val em = getEmployeeByDni(employee.dni!!)?:return null
 
-            return suspendTransaction {
+        return try {
+            suspendTransaction {
                 EmployeeDao.new {
                     this.name = employee.name!! //es seguro.
                     this.dni = employee.dni!!   //es seguro.
@@ -169,8 +175,13 @@ class PersistenceEmployeeRepository: EmployeeInterface {
                     this.token = employee.token!!
                 }
             }.let {
-               EmployeeDaoToEmployee(it) //hago directamente el mapping.
+                EmployeeDaoToEmployee(it) //hago directamente el mapping.
             }
+        }catch (e: Exception){
+            println("Error en el registro de empleado: ${e.localizedMessage}")
+            null
+        }
+
     }
 
 }

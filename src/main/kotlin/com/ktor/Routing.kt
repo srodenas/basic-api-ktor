@@ -162,6 +162,7 @@ fun Application.configureRouting() {
             try{
                 val user = call.receive<UpdateEmployee>()
                 val register = ProviderUseCase.register(user)
+
                 if (register != null)
                     call.respond(HttpStatusCode.Created, "Se ha insertado correctamente con dni =  ${register.dni}")
                 else
@@ -174,7 +175,9 @@ fun Application.configureRouting() {
 
         }
 
-    }
+    } //fin routing
+
+
 }
 
 
