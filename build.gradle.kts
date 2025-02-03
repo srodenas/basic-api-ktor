@@ -38,9 +38,8 @@ dependencies {
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
 
-
-    // MariaDB Driver
-   // implementation("org.mariadb.jdbc:mariadb-java-client:2.7.3")
-   // implementation("org.jetbrains.exposed:exposed-jdbc:0.56.0")
+    implementation("io.ktor:ktor-server-auth-jwt:3.0.3")  // Autenticación JWT
+    implementation("io.ktor:ktor-server-auth:3.0.3")      // Módulo de autenticación
+    implementation("com.auth0:java-jwt:4.4.0")            // Librería para manejar JWT
 
 }
