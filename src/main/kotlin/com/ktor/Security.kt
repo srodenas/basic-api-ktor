@@ -14,13 +14,28 @@ fun Application.configureSecurity(){
     }
 
 
-    routing {
-        authenticate("jwt-auth") {
-            get("/protected") {
-                val principal = call.principal<JWTPrincipal>()
-                val username = principal?.getClaim("username", String::class)
-                call.respondText("Hello, $username! You are authenticated.")
+    /*
+    1.- Todo lo que pongamos en authenticate("jwt-auth"), requieren autenticación, por tanto
+    esas rutas están protegidas. La estrategia de autenticación es por jwt-auth. Sólo los usuarios
+    autenticados con un jwt valido, podrán acceder a dicha ruta.
+    2.- ktor, automáticamente antes de llamar a la ruta, verifica y valida el token.
+    3.- Si el token ha sido aceptado, entonces se procede a sacar del payload el username
+    y se manda una respuesta al cliente.
+
+     */
+
+        routing {
+                authenticate("jwt-auth") {
+
+                /*
+                En este punto, ktor ya ha verificado y validado el token. Ha interceptado
+                la petición antes de invocar el endpoint.
+                 */
+                get("/protected") {
+                    val principal = call.principal<JWTPrincipal>()  //accedo a la información del token ya validado.
+                    val username = principal?.getClaim("username", String::class) //obtenemos del payload el username
+                    call.respondText("Hello, $username! You are authenticated.")  //La respuesta.
+                }
             }
-        }
     }
 }
