@@ -85,7 +85,6 @@ class PersistenceEmployeeRepository: EmployeeInterface {
     }
 
 
-
     override suspend fun postEmployee(employee: Employee): Boolean {
         val em = getEmployeeByDni(employee.dni)
         return if (em == null) {
@@ -108,7 +107,6 @@ class PersistenceEmployeeRepository: EmployeeInterface {
     }
 
 
-
     override suspend fun updateEmployee(employee: UpdateEmployee, dni: String): Boolean {
         var num = 0
         try {
@@ -126,7 +124,7 @@ class PersistenceEmployeeRepository: EmployeeInterface {
                     }
             }
 
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             false
         }
@@ -141,15 +139,18 @@ class PersistenceEmployeeRepository: EmployeeInterface {
     }
 
     //método que a partir de
-    override suspend fun login(dni: String, pass: String): Boolean {
-        val employee = getEmployeeByDni(dni)?: return false
+    override suspend fun login(dni: String, pass: String): Employee? {
+        val employee = getEmployeeByDni(dni) ?: return null
 
-        return try{
+        return try {
             val posibleHash = PasswordHash.hash(pass) //hasheo la password del logueo
-            posibleHash == employee.password //compruebo con la que hay en la BBDD
-        }catch (e: Exception){
+            return if (posibleHash == employee.password) //compruebo con la que hay en la BBDD
+                employee
+            else
+                null
+        } catch (e: Exception) {
             println("Error en la autenticación: ${e.localizedMessage}")
-            false
+            null
         }
     }
 
@@ -177,7 +178,7 @@ class PersistenceEmployeeRepository: EmployeeInterface {
             }.let {
                 EmployeeDaoToEmployee(it) //hago directamente el mapping.
             }
-        }catch (e: Exception){
+        } catch (e: Exception) {
             println("Error en el registro de empleado: ${e.localizedMessage}")
             null
         }
@@ -185,3 +186,4 @@ class PersistenceEmployeeRepository: EmployeeInterface {
     }
 
 }
+

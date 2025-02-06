@@ -7,15 +7,15 @@ enum class Salary {
 
 @Serializable
 data class Employee(
-    val name : String,
+    var name : String,
     val dni : String,
-    val password : String,
-    val description: String,
-    val salary: Salary,
-    val phone: String,
-    val urlImage: String ? = null,
-    val disponible: Boolean = true,
-    val token:String ? = null
+    var password : String,
+    var description: String,
+    var salary: Salary,
+    var phone: String,
+    var urlImage: String ? = null,
+    var disponible: Boolean = true,
+    var token:String ? = null
 )
 
 

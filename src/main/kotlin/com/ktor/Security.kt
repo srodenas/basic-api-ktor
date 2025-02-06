@@ -6,6 +6,10 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
+
+/*
+función de extensión, que configura la utilización de autenticación por jwt.
+ */
 fun Application.configureSecurity(){
     install(Authentication ){
         jwt("jwt-auth") {

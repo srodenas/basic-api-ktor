@@ -24,4 +24,5 @@ fun Application.myModule() {
     configureSerialization()
     configureRouting()
     configureDatabases()
+    configureSecurity()
 }

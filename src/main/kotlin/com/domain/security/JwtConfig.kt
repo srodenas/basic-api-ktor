@@ -46,12 +46,12 @@ object JwtConfig {
     /*
     No quiero que expire. De lo contrario necesitaría un segundo token de refresco.
      */
-    fun generateToken(username: String): String {
+    fun generateToken(dni: String): String {
         return JWT.create()
             .withIssuer(issuer)
             .withAudience(audience)
             .withSubject("Authentication")
-            .withClaim("username", username)
+            .withClaim("dni", dni)
            // .withExpiresAt(Date(System.currentTimeMillis() + 600000))  // Expira en 10 min
             .sign(algorithm)
     }
@@ -82,7 +82,7 @@ object JwtConfig {
                 .build()
         )
         config.validate { credential ->
-            if (credential.payload.getClaim("username").asString() != null) {
+            if (credential.payload.getClaim("dni").asString() != null) {
                 JWTPrincipal(credential.payload)
             } else null
         }
