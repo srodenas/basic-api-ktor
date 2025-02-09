@@ -1,5 +1,7 @@
 package com.ktor
 import com.domain.security.JwtConfig
+import com.domain.usecase.ProviderUseCase
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
@@ -11,9 +13,10 @@ import io.ktor.server.routing.*
 función de extensión, que configura la utilización de autenticación por jwt.
  */
 fun Application.configureSecurity(){
+
     install(Authentication ){
         jwt("jwt-auth") {
-            JwtConfig.configureAuthentication(this)
+            JwtConfig.configureAuthentication(this) //configuración automática.
         }
     }
 
@@ -42,4 +45,26 @@ fun Application.configureSecurity(){
                 }
             }
     }
+} //fin función extensión de configurar jwt
+
+/*
+Método que llamaremos por cada enpoint protegido
+1.- this, es el contexto de las solicitudes HTTP que recibe el servidor.
+2.- en esa solicitud, sacamos la información del payload.
+3.- principal<JWTPrincipal> es una función de extensión de ApplicationCall. Devuelve
+los datos del usuario que hemos pasado en el token.
+ */
+suspend fun ApplicationCall.validateToken(token: String): Boolean{
+    val dataUser = this.principal<JWTPrincipal>()  //Recuperamos el usuario autenticado.
+    val dni = dataUser?.payload?.getClaim("dni")?.asString()
+
+    val user = ProviderUseCase.getEmployeeByDni(dni!!)
+    if (user == null || token != user.token){
+        //El usuario que hay en el token, no existe en la BBDD
+        this.respond(HttpStatusCode.Unauthorized, "Token inválido o usuario No disponible")
+        return false //El token no coincide con el de la BBDD.
+    }else
+        return true  //El token es el mismo que el del usuario
+
+
 }

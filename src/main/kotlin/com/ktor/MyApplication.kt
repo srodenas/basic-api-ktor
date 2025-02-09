@@ -8,6 +8,9 @@ import io.ktor.server.application.*
 3.- Se lee la configuración y se establece qué modulos se deberán cargar.
 4.- kotlin, utiliza la reflexion para buscar la función module() en tiempo de ejecución y llamarla sin tener que hacerse
 de forma explícita.
+5.- Recordamos, que en cada fichero del tipo Database.kt, Routing.kt, etc., debemos añadir una fucnión de extensión
+asociada a Application y como MyApplication.module, tambíen define una funsión de extensión a Application, es por lo que
+podemos llamar a los métodos de configure..., ya que es como si estuviéramos en el this de Application (mismo contexto)
  */
 
 fun main(args: Array<String>) {
@@ -22,7 +25,7 @@ ktor trabaja con la clase interna Application que es la que representa el contex
 
 fun Application.myModule() {
     configureSerialization()
-    configureRouting()
-    configureDatabases()
     configureSecurity()
+    configureDatabases()
+    configureRouting()
 }

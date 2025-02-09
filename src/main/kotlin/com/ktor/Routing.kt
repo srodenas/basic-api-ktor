@@ -5,6 +5,8 @@ import com.domain.models.Salary
 import com.domain.models.UpdateEmployee
 import com.domain.usecase.ProviderUseCase
 import com.domain.usecase.ProviderUseCase.logger
+import com.ktor.routing.authRouting
+import com.ktor.routing.employeeRouting
 import io.ktor.http.*
 import io.ktor.serialization.*
 import io.ktor.server.application.*
@@ -19,175 +21,14 @@ fun Application.configureRouting() {
         ktor evalua los endpoint por orden.
          */
 
-        get("/") {
-            call.respondText("Hello World!")
-        }
-
-
-        /*
-        En esta ruta, comprobamos diferentes parámetros:
-        1.- Que no tenga ningún parámetro. Devuelve todos los empleados sin filtro.
-        2.- Que le pasemos el dni por query. Devuelve ese empleado . Lo tengo de ejemplo, ya que no debería utilizar una query para un recurso específico.
-        3.- Que le pasemos el salario por query. Devuelve todos los empleados que tienen dicho salario.
-         */
-        get("/employee"){
-
-            val employeeDni = call.request.queryParameters["dni"]
-            logger.warn("El Dni tiene de valor $employeeDni")
-            if (employeeDni != null) {
-                val employee = ProviderUseCase.getEmployeeByDni(employeeDni)
-                if (employee == null) {
-                    call.respond(HttpStatusCode.NotFound, "Empleado no encontrado")
-                } else {
-                    call.respond(employee)
-                }
-                return@get
-            }
-
-            //comprobamos si hemos pasado el parámetro salary
-            val salary = call.request.queryParameters["salary"]
-            logger.warn("El salario pasado es $salary")
-            if (salary != null) {
-                try{
-                    val s = salary.uppercase()
-                    logger.warn("salario seleccionado: ${Salary.valueOf(s)}")
-                    val employees = ProviderUseCase.getEmployeeBySalary(Salary.valueOf(salary.uppercase()))  //Salary.valueOf(String.upperecase()) convierte un string a Enum
-                    call.respond(employees)
-                }catch (e: IllegalArgumentException){
-                    call.respond(HttpStatusCode.BadRequest, "El salario no corresponde con los tipos utilizados")
-                }
-
-            }else{ //No hemos pasado ninguna query
-                val employees = ProviderUseCase.getAllEmployees()  //Ya tengo todos los empleados.
-                call.respond(employees)
-            }
-        }
-
-        /*
-        Endpoint que no es recomendable, porque no se debe utilizar parámetros de url para filtrar. Para eso están los de consulta.
-         */
-        get("/employee/{employeeDni}") {
-
-            //Comprobamos si se ha pasado el dni por parámetro
-            val employeeDni = call.parameters["employeeDni"]
-            if (employeeDni == null){
-                call.respond(HttpStatusCode.BadRequest, "Debes pasar el dni a buscar") //Montamos una respuesta con código 400.
-                return@get  //finalizamos en endpoint y mandamos inmediantamente la respuesta.
-            }
-
-            val employee = ProviderUseCase.getEmployeeByDni(employeeDni)
-            if (employee ==null){
-                call.respond(HttpStatusCode.NotFound,"Empleado no encontrado")  //Montamos un 404 de no encontrado.
-                return@get //finalizamos en endpoint y mandamos inmediantamente la respuesta.
-            }
-            call.respond(employee)  //mandamos el empleado como respuesta al cliente.
-        }
-
-
-
-
-        post("/employee"){
-            try{
-                val emp = call.receive<Employee>()  //Leemos el cuerpo de la solicitud como un objeto Employee
-                val res = ProviderUseCase.insertEmployee(emp)
-                if (! res){
-                    call.respond(HttpStatusCode.Conflict, "El empleado no pudo insertarse. Puede que ya exista")
-                    return@post //aunque no es necesario, es buena práctica ponerlo para no olvidarlo, pero no hay más lógica.
-                }
-                call.respond(HttpStatusCode.Created, "Se ha insertado correctamente con dni =  ${emp.dni}")
-            } catch (e : IllegalStateException){
-                call.respond(HttpStatusCode.BadRequest, "Error en el formato de envío de datos o lectura del cuerpo.")
-            } catch (e:JsonConvertException){
-                call.respond(HttpStatusCode.BadRequest," Problemas en la conversión json")
-            } catch (e: Exception){
-                call.respond(HttpStatusCode.BadRequest, "Error en los datos. Probablemente falten.")
-            }
-
-
-        }
-
-        patch("/employee/{employeeDni}") {
-            try{
-                val dni = call.parameters["employeeDni"]
-                dni?.let{
-                    val updateEmployee = call.receive<UpdateEmployee>()
-                    val res = ProviderUseCase.updateEmployee(updateEmployee, dni)
-                    if (! res){
-                        call.respond(HttpStatusCode.Conflict, "El empleado no pudo modificarse. Puede que no exista")
-                        return@patch //aunque no es necesario, es buena práctica ponerlo para no olvidarlo, pero no hay más lógica.
-                    }
-                    call.respond(HttpStatusCode.Created, "Se ha actualizado correctamente con dni =  ${dni}")
-                }?: run{
-                    call.respond(HttpStatusCode.BadRequest,"Debes identificar el empleado")
-                    return@patch //aunque no es necesario, es buena práctica ponerlo para no olvidarlo, pero no hay más lógica.
-                }
-            } catch (e: IllegalStateException){
-                call.respond(HttpStatusCode.BadRequest,"Error en el formado de envío de los datos o lectura del cuerpo.")
-            } catch (e: JsonConvertException){
-                call.respond(HttpStatusCode.BadRequest,"Error en el formado de json")
-            }
-        }
-
-
-        delete("/employee/{employeeDni}") {
-            val dni = call.parameters["employeeDni"]
-            logger.warn("Queremos borrar el empleado con dni $dni")
-            dni?.let{
-                val res = ProviderUseCase.deleteEmployee(dni)
-                if (! res){
-                    call.respond(HttpStatusCode.NotFound,"Empleado no encontrado para borrar")  //Montamos un 404 de no encontrado.
-                }else{
-                    call.respond(HttpStatusCode.NoContent,)
-                }
-            }?:run{
-                call.respond(HttpStatusCode.NoContent,"Debes identintificar el empleado")
-            }
-            return@delete
-        }
-
+        authRouting()  //rutas para el login y el registro
+        employeeRouting()  //rutas que serán protegidas.
 
         // Static plugin. Try to access `/static/index.html`
         staticResources("/static", "static")
     }
 
-    routing {
-        post ("/auth"){
-            try{
-                val loginRequest = call.receive<UpdateEmployee>()
-                val login : Employee? = ProviderUseCase.login(loginRequest.dni, loginRequest.password)  //caso de uso del login
 
-                if (login != null) {
-                    val token = login!!.token
-                    call.respondText(token!!)
-                }
-                else
-                    call.respond(HttpStatusCode.Unauthorized, "Usuario incorrecto")
-            }catch (e: Exception){
-                call.respond(HttpStatusCode.BadRequest, "Formato de solicitud incorrecto")
-                return@post
-            }
-        }
-
-        post ("/register"){
-            try{
-                val user = call.receive<UpdateEmployee>()
-                val register = ProviderUseCase.register(user)
-
-                if (register != null)
-                    call.respond(HttpStatusCode.Created, "Se ha insertado correctamente con dni =  ${register.dni}")
-                else
-                    call.respond(HttpStatusCode.Conflict, "No se ha podido realizar el registro")
-            } catch (e : IllegalStateException){
-                call.respond(HttpStatusCode.BadRequest, "Error en el formato de envío de datos o lectura del cuerpo.")
-            } catch (e:JsonConvertException){
-                call.respond(HttpStatusCode.BadRequest," Problemas en la conversión json")
-            }
-
-        }
-
-//Necesito hacer una carga de usuarios...... Para mas adelante.
-
-    } //fin routing
 }
 
 

@@ -51,7 +51,8 @@ object JwtConfig {
             .withIssuer(issuer)
             .withAudience(audience)
             .withSubject("Authentication")
-            .withClaim("dni", dni)
+            .withClaim("dni", dni) //son específicas del usuario.
+            .withClaim("time", System.currentTimeMillis()) //específicas del usuario.
            // .withExpiresAt(Date(System.currentTimeMillis() + 600000))  // Expira en 10 min
             .sign(algorithm)
     }
@@ -70,8 +71,7 @@ object JwtConfig {
           {
                "username": "john_doe"
           }
-    4.- Faltaría también verificar si el usuario existe en la BBDD. Puede que haya sido bloqueado
-    o simplemente que no pueda acceder por privilegios.
+    4.- Se crea un objeto JWTPrincipal, con información del usuario extraída del token
      */
     fun configureAuthentication(config: JWTAuthenticationProvider.Config) {
         config.realm = realm
