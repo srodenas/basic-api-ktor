@@ -18,7 +18,7 @@ class RegisterUseCase(val repository: EmployeeInterface) {
         employee.disponible = employee.disponible?: true
         employee.token = employee.token?: ""
 
-        return if (repository.login(employee.dni!!, employee.password!!))
+        return if (repository.login(employee.dni!!, employee.password!!)!=null)
                     null
                 else
                     repository.register(employee)

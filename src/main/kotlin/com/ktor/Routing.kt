@@ -152,14 +152,20 @@ fun Application.configureRouting() {
 
     routing {
         post ("/auth"){
-            val loginRequest = call.receive<UpdateEmployee>()
-            val login = ProviderUseCase.login(loginRequest.dni, loginRequest.password)  //caso de uso del login
+            try{
+                val loginRequest = call.receive<UpdateEmployee>()
+                val login : Employee? = ProviderUseCase.login(loginRequest.dni, loginRequest.password)  //caso de uso del login
 
-            if (login != null) {
-                call.respond(HttpStatusCode.OK, "${login.token}")
+                if (login != null) {
+                    val token = login!!.token
+                    call.respondText(token!!)
+                }
+                else
+                    call.respond(HttpStatusCode.Unauthorized, "Usuario incorrecto")
+            }catch (e: Exception){
+                call.respond(HttpStatusCode.BadRequest, "Formato de solicitud incorrecto")
+                return@post
             }
-            else
-                call.respond(HttpStatusCode.Unauthorized, "Usuario incorrecto")
         }
 
         post ("/register"){

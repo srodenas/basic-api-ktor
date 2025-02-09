@@ -4,8 +4,7 @@ import com.data.persistence.models.EmployeeDao
 import com.data.persistence.models.EmployeeTable
 import com.data.persistence.models.suspendTransaction
 import com.data.security.PasswordHash
-import com.domain.mapping.EmployeeDaoToEmployee
-import com.domain.mapping.toSalaryOrDefault
+import com.domain.mapper.toEmployee
 import com.domain.models.Employee
 import com.domain.models.Salary
 import com.domain.models.UpdateEmployee
@@ -26,7 +25,7 @@ class PersistenceEmployeeRepository: EmployeeInterface {
 
     override suspend fun getAllEmployee(): List<Employee> {
         return suspendTransaction {
-            EmployeeDao.all().map(::EmployeeDaoToEmployee)
+            EmployeeDao.all().map { it.toEmployee() }
         }
     }
 
@@ -46,7 +45,7 @@ class PersistenceEmployeeRepository: EmployeeInterface {
                 .find {
                     EmployeeTable.salary eq salary.toString()  //comparamos sobre el campo de la tabla, no de la entidad.
                 }
-                .map(::EmployeeDaoToEmployee)
+                .map { it.toEmployee() }
         }
     }
 
@@ -62,7 +61,7 @@ class PersistenceEmployeeRepository: EmployeeInterface {
                 .find {
                     EmployeeTable.name eq name
                 }
-                .map(::EmployeeDaoToEmployee)
+                .map { it.toEmployee() }
         }
     }
 
@@ -79,7 +78,7 @@ class PersistenceEmployeeRepository: EmployeeInterface {
                     EmployeeTable.dni eq dni
                 }
                 .limit(1)
-                .map(::EmployeeDaoToEmployee)
+                .map {it.toEmployee()}
                 .firstOrNull()
         }
     }
@@ -144,7 +143,7 @@ class PersistenceEmployeeRepository: EmployeeInterface {
 
         return try {
             val posibleHash = PasswordHash.hash(pass) //hasheo la password del logueo
-            return if (posibleHash == employee.password) //compruebo con la que hay en la BBDD
+            if (posibleHash == employee.password) //compruebo con la que hay en la BBDD
                 employee
             else
                 null
@@ -176,7 +175,7 @@ class PersistenceEmployeeRepository: EmployeeInterface {
                     this.token = employee.token!!
                 }
             }.let {
-                EmployeeDaoToEmployee(it) //hago directamente el mapping.
+                it.toEmployee() //hago directamente el mapping.
             }
         } catch (e: Exception) {
             println("Error en el registro de empleado: ${e.localizedMessage}")

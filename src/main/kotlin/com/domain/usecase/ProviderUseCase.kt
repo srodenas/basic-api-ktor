@@ -83,7 +83,7 @@ object ProviderUseCase {
         return deleteEmployeUseCase()
     }
 
-    suspend fun login(dni: String?, pass: String?)  = loginUseCase(dni, pass)
+    suspend fun login(dni: String?, pass: String?) : Employee? = loginUseCase(dni, pass)
 
     suspend fun register(employee : UpdateEmployee): Employee? {
 

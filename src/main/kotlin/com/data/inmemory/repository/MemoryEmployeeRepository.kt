@@ -78,11 +78,12 @@ class MemoryEmployeeRepository : EmployeeInterface {
         }
     }
 
-    override suspend fun login(dni: String, pass: String): Boolean {
+    override suspend fun login(dni: String, pass: String): Employee? {
         TODO("Not yet implemented")
     }
 
     override suspend fun register(employee: UpdateEmployee): Employee? {
         TODO("Not yet implemented")
     }
+
 }
