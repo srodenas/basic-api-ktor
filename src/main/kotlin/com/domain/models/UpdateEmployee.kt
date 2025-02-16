@@ -16,5 +16,6 @@ data class UpdateEmployee (
     var phone: String? = null,
     var urlImage: String ? = null,
     var disponible: Boolean ? = true,
-    var token:String ? = null
+    var token:String ? = null,
+    var msg: String ?=null
 )

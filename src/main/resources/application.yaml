@@ -1,9 +1,0 @@
-ktor:
-    application:
-        modules:
-            - com.ktor.MyApplicationKt.myModule
-    deployment:
-        port: 8081
-       # host:  "localhost"  # ip del servidor
-
-

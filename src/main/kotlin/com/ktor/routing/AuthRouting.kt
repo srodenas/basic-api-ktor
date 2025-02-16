@@ -26,11 +26,13 @@ fun Route.authRouting(){
                 val login : Employee? = ProviderUseCase.login(loginRequest.dni, loginRequest.password)  //caso de uso del login
 
                 if (login != null) {
-                    val token = login!!.token
-                    call.respondText(token!!)
+                    val emp = UpdateEmployee(token =login!!.token )  //vacío.
+                    emp.msg = "Usuario logueado correctamente"
+                    call.respond(HttpStatusCode.OK, emp)
                 }
                 else
-                    call.respond(HttpStatusCode.Unauthorized, "Usuario incorrecto")
+                    call.respond(HttpStatusCode.Unauthorized, "Problema de autenticación")
+
             }catch (e: Exception){
                 call.respond(HttpStatusCode.BadRequest, "Formato de solicitud incorrecto")
                 return@post
@@ -46,8 +48,11 @@ fun Route.authRouting(){
                 val user = call.receive<UpdateEmployee>()
                 val register = ProviderUseCase.register(user)
 
-                if (register != null)
-                    call.respond(HttpStatusCode.Created, "Se ha insertado correctamente con dni =  ${register.dni}")
+                if (register != null) {
+                    val emp = UpdateEmployee()  //vacío.
+                    emp.msg = "Usuario con dni =  ${register.dni}, registrado correctamente. Vuelva a loguearse"
+                    call.respond(HttpStatusCode.Created, emp)
+                }
                 else
                     call.respond(HttpStatusCode.Conflict, "No se ha podido realizar el registro")
 
