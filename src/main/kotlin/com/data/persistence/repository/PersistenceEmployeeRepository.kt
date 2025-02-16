@@ -84,6 +84,8 @@ class PersistenceEmployeeRepository: EmployeeInterface {
     }
 
 
+
+
     override suspend fun postEmployee(employee: Employee): Boolean {
         val em = getEmployeeByDni(employee.dni)
         return if (em == null) {
@@ -164,7 +166,7 @@ class PersistenceEmployeeRepository: EmployeeInterface {
         return try {
             suspendTransaction {
                 EmployeeDao.new {
-                    this.name = employee.name!! //es seguro.
+                    this.name = employee.name!! //es seguro. Lo seteamos
                     this.dni = employee.dni!!   //es seguro.
                     this.password = PasswordHash.hash(employee.password!!) //hasheo la password.
                     this.description = employee.description!!
@@ -175,13 +177,37 @@ class PersistenceEmployeeRepository: EmployeeInterface {
                     this.token = employee.token!!
                 }
             }.let {
-                it.toEmployee() //hago directamente el mapping.
+                it.toEmployee() //Al nuevo registro, le hago directamente el mapping a Employee.
             }
         } catch (e: Exception) {
             println("Error en el registro de empleado: ${e.localizedMessage}")
             null
         }
 
+    }
+
+
+    suspend fun getEmployeeByDni1(dni: String): Employee? {
+        return suspendTransaction {
+            val resultRow = EmployeeTable
+                .select ( EmployeeTable.dni eq dni )
+                .singleOrNull()
+
+            //Si existe el empleado, lo mapeamos a la clase Employee
+            resultRow?.let {
+                Employee(
+                    dni = it[EmployeeTable.dni],
+                    name = it[EmployeeTable.name],
+                    password = it[EmployeeTable.password],
+                    salary = Salary.valueOf(it[EmployeeTable.salary]),
+                    phone = it[EmployeeTable.phone],
+                    urlImage = it[EmployeeTable.urlImage],
+                    token = it[EmployeeTable.token],
+                    description = it[EmployeeTable.description]
+
+                )
+            }
+        }
     }
 
 }

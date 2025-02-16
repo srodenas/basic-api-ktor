@@ -1,5 +1,7 @@
 package com.ktor.routing
 
+import com.domain.mapper.toEmployee
+import com.domain.mapper.toUpdateEmployee
 import com.domain.models.Employee
 import com.domain.models.UpdateEmployee
 import com.domain.usecase.ProviderUseCase
@@ -26,7 +28,9 @@ fun Route.authRouting(){
                 val login : Employee? = ProviderUseCase.login(loginRequest.dni, loginRequest.password)  //caso de uso del login
 
                 if (login != null) {
-                    val emp = UpdateEmployee(token =login!!.token )  //vacío.
+                    val emp = login.toUpdateEmployee()  //lo mapeamos a UpdateEmployee, para actualizar el token.
+                    emp.token = login!!.token   //seteamos el nuevo token
+                   // val emp = UpdateEmployee(token =login!!.token )  //vacío.
                     emp.msg = "Usuario logueado correctamente"
                     call.respond(HttpStatusCode.OK, emp)
                 }
@@ -46,12 +50,12 @@ fun Route.authRouting(){
         post(){
             try{
                 val user = call.receive<UpdateEmployee>()
-                val register = ProviderUseCase.register(user)
+                val register = ProviderUseCase.register(user)  //devuelvo un Employee registrado o null sino.
 
                 if (register != null) {
-                    val emp = UpdateEmployee()  //vacío.
-                    emp.msg = "Usuario con dni =  ${register.dni}, registrado correctamente. Vuelva a loguearse"
-                    call.respond(HttpStatusCode.Created, emp)
+                    val upEmp = register.toUpdateEmployee()  //mapeamos a updateEmployee para la respuesta.
+                    upEmp.msg = "Usuario con dni =  ${upEmp.dni}, registrado correctamente. Vuelva a loguearse"
+                    call.respond(HttpStatusCode.Created, upEmp)
                 }
                 else
                     call.respond(HttpStatusCode.Conflict, "No se ha podido realizar el registro")

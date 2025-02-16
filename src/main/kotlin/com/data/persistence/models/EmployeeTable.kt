@@ -24,7 +24,6 @@ object  EmployeeTable: IntIdTable("Employee") {
     val urlImage = varchar("url_image", 255).nullable()
     val disponible = bool("disponible")
     val token = varchar("token", 255).nullable()
-
   //  override val primaryKey = PrimaryKey(id)
 
 }

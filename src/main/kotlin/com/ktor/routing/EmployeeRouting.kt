@@ -1,5 +1,6 @@
 package com.ktor.routing
 
+import com.domain.mapper.toUpdateEmployee
 import com.domain.models.Employee
 import com.domain.models.Salary
 import com.domain.models.UpdateEmployee
@@ -53,7 +54,9 @@ fun Route.employeeRouting(){
                     if (employee == null) {
                         call.respond(HttpStatusCode.NotFound, "Empleado no encontrado")
                     } else {
-                        call.respond(employee)
+                        val upEmployee = employee.toUpdateEmployee()
+                        upEmployee.msg = "Employee OK"  //por si queremos personalizar el mensaje.
+                        call.respond(upEmployee)
                     }
                     return@get
                 }
@@ -80,7 +83,7 @@ fun Route.employeeRouting(){
 
 
 
-            get ("{employeeDni"){
+            get("{employeeDni}"){
                 val token = call.request.headers["Authorization"]?.removePrefix("Bearer ") //token el header
                 val validate = call.validateToken(token!!)  //si llega aqúi, es porque el token se ha verificado antes automaticamente
                 if (!validate)

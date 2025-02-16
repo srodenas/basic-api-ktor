@@ -52,5 +52,4 @@ class EmployeeDao (id : EntityID<Int>) :  IntEntity(id){
     var isActive by EmployeeTable.disponible
     var token by EmployeeTable.token
 
-
 }
