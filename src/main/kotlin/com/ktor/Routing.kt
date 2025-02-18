@@ -14,6 +14,7 @@ import io.ktor.server.http.content.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import java.io.File
 
 fun Application.configureRouting() {
     routing {
@@ -26,6 +27,13 @@ fun Application.configureRouting() {
 
         // Static plugin. Try to access `/static/index.html`
         staticResources("/static", "static")
+
+        /*
+        La ruta  http://localhost:8081/images/4700000/345434534343.jpg  --> /src/upload/images/4700000/345434534343.jpg
+         */
+        staticFiles("/images", File("upload/images"))  //para las imágenes
+        staticFiles("/files", File("upload/files")) //para otro tipo de ficheros.
+
     }
 
 

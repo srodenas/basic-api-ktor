@@ -5,6 +5,8 @@ import com.domain.models.Employee
 import com.domain.models.Salary
 import com.domain.models.UpdateEmployee
 import com.domain.repository.EmployeeInterface
+import com.ktor.ApplicationContext
+import java.io.File
 
 class RegisterUseCase(val repository: EmployeeInterface) {
     operator suspend fun invoke(employee: UpdateEmployee): Employee? {
@@ -20,7 +22,38 @@ class RegisterUseCase(val repository: EmployeeInterface) {
 
         return if (repository.login(employee.dni!!, employee.password!!)!=null)
                     null
+                else {
+                    val reg = repository.register(employee)  //registro el nuevo employee
+                    reg?.let{
+                        createDir (it.dni)
+                    }
+                    reg  //devuelvo el employee creado o nulo si no se ha podido crear.
+
+
+                 /*   val isDir = createDir("11111112")
+                    null
+
+                  */
+                }
+
+    }
+
+    private fun createDir(dni: String) :Boolean{
+        try{
+            val path = ApplicationContext.context.environment.config.property("ktor.path.images").getString()
+            val dir = File(path, dni)
+            return if (!dir.exists()){
+                val created = dir.mkdirs()
+                if (created)
+                    true
                 else
-                    repository.register(employee)
+                    false
+            }
+            else
+                false
+        }catch (e:Exception){
+            e.printStackTrace()
+            return false
+        }
     }
 }

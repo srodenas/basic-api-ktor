@@ -33,5 +33,4 @@ fun Application.configureDatabases(){
         log.error("Database connection failed: ${e.message}")
     }
 
-
 }
