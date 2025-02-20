@@ -1,6 +1,5 @@
 package com.domain.usecase
 
-import com.data.security.PasswordHash
 import com.domain.models.Employee
 import com.domain.models.Salary
 import com.domain.models.UpdateEmployee
@@ -25,7 +24,7 @@ class RegisterUseCase(val repository: EmployeeInterface) {
                 else {
                     val reg = repository.register(employee)  //registro el nuevo employee
                     reg?.let{
-                        createDir (it.dni)
+                        createDir (it.dni)  //creamos directorio con el dni, siempre y cuando no exista.
                     }
                     reg  //devuelvo el employee creado o nulo si no se ha podido crear.
 

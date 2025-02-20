@@ -19,7 +19,7 @@ interface EmployeeInterface {
     //Debe ser nullable, por si no existe.
     suspend fun getEmployeeByDni (dni: String) : Employee ?
 
-    suspend fun postEmployee(employee: Employee) : Boolean
+    suspend fun postEmployee(employee: Employee) : Employee ?
 
     suspend fun updateEmployee(employee: UpdateEmployee, dni:String) : Boolean
 

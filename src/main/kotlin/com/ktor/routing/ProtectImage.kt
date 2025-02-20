@@ -12,6 +12,7 @@ fun Route.imgRouting(){
     route("/protected/{dni}/{imageName}") {
         authenticate("jwt-auth") {
 
+            //todo probar código.
 
             get() {
                 val token = call.request.headers["Authorization"]?.removePrefix("Bearer ") //token el header
@@ -31,8 +32,14 @@ fun Route.imgRouting(){
                 if (!file.exists()){
                     return@get call.respond(HttpStatusCode.BadRequest, "Imagen no encontrada")
                 }
-               // Sin terminar......
+                /*
+                La imagen existe y por tanto,
+                tengo que devolverle la url de dicha imagen.
+                 */
 
+
+                val pathUrl = ApplicationContext.context.environment.config.property("ktor.pathUrl").getString() + "/$dni" + "/$nameImage"
+                call.respondText(pathUrl)  //mandamos el recurso en forma de http
             }
         }
     }

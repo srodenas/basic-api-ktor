@@ -112,7 +112,7 @@ fun Route.employeeRouting(){
             }
 
 
-
+            //todo enviar imagen base64, decodificarla, almacenarla físicamente y persistir
 
             post(){
                 val token = call.request.headers["Authorization"]?.removePrefix("Bearer ") //token el header
@@ -121,12 +121,13 @@ fun Route.employeeRouting(){
                     return@post  //Ya se ha mandado el responde dentro de la validación
                 try{
                     val emp = call.receive<Employee>()  //Leemos el cuerpo de la solicitud como un objeto Employee
-                    val res = ProviderUseCase.insertEmployee(emp)
-                    if (! res){
+                    val new = ProviderUseCase.insertEmployee(emp)
+                    if (new == null){
                         call.respond(HttpStatusCode.Conflict, "El empleado no pudo insertarse. Puede que ya exista")
                         return@post //aunque no es necesario, es buena práctica ponerlo para no olvidarlo, pero no hay más lógica.
                     }
-                    call.respond(HttpStatusCode.Created, "Se ha insertado correctamente con dni =  ${emp.dni}")
+                   // call.respond(HttpStatusCode.Created, "Se ha insertado correctamente con dni =  ${new.dni}")
+                    call.respond(HttpStatusCode.Created, new)  //mando el nuevo employee
                 } catch (e : IllegalStateException){
                     call.respond(HttpStatusCode.BadRequest, "Error en el formato de envío de datos o lectura del cuerpo.")
                 } catch (e: JsonConvertException){

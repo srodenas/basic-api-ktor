@@ -86,7 +86,7 @@ class PersistenceEmployeeRepository: EmployeeInterface {
 
 
 
-    override suspend fun postEmployee(employee: Employee): Boolean {
+    /*override suspend fun postEmployee(employee: Employee): Boolean {
         val em = getEmployeeByDni(employee.dni)
         return if (em == null) {
             suspendTransaction {
@@ -106,6 +106,24 @@ class PersistenceEmployeeRepository: EmployeeInterface {
         } else
             false
     }
+*/
+
+    override suspend fun postEmployee(employee: Employee): Employee ?  = suspendTransaction {
+                EmployeeDao.new {
+                    this.name = employee.name
+                    this.dni = employee.dni
+                    this.password = PasswordHash.hash(employee.password) //hasheo la password.
+                    this.description = employee.description
+                    this.salary = employee.salary.toString()
+                    this.phone = employee.phone
+                    this.urlImage = employee.urlImage
+                    this.isActive = employee.disponible
+                    this.token = employee.token
+                }
+            }.toEmployee()
+
+
+
 
 
     override suspend fun updateEmployee(employee: UpdateEmployee, dni: String): Boolean {
