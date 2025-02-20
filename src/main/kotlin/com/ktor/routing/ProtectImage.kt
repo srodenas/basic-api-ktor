@@ -9,7 +9,7 @@ import io.ktor.server.routing.*
 import java.io.File
 
 fun Route.imgRouting(){
-    route("/protected/{dni}/{imageName}") {
+    route("/images/{dni}/{imageName}") {
         authenticate("jwt-auth") {
 
             //todo probar código.
@@ -28,18 +28,32 @@ fun Route.imgRouting(){
                 //ya tengo el dni y el nombre de la imagen. También he validado correctamente el token.
                 //Necesito comprobar si existe el fichero y en su caso, devolverlo.
                 val path = ApplicationContext.context.environment.config.property("ktor.path.images").getString() + "/$dni"
-                val file = File(path, nameImage)  //Ya tengo la imagen
-                if (!file.exists()){
+                val img = File(path, nameImage)  //Ya tengo la imagen
+                if (!img.exists()){
                     return@get call.respond(HttpStatusCode.BadRequest, "Imagen no encontrada")
                 }
                 /*
                 La imagen existe y por tanto,
                 tengo que devolverle la url de dicha imagen.
                  */
+                call.respondFile(img)  //mandamos la imagen completa.
 
+                /*
+                Esto es estupendo, porque Glide, hace la solicitud http y recibe el binario.
+                El mismo, lo convierte a bitMap para mostrarlo en una view.
 
-                val pathUrl = ApplicationContext.context.environment.config.property("ktor.pathUrl").getString() + "/$dni" + "/$nameImage"
-                call.respondText(pathUrl)  //mandamos el recurso en forma de http
+                En la misma solicitud http de Glide, hay que añadirle un header con el token y para ello se debe
+                especificar que meterá una cabecera personalizada, con el token. Pongo código para que no se me olvide.
+
+                val token =  "Bearer"+ token
+
+Glide.with(context)
+    .load(GlideUrl("http://ip/images/$dni/$imageName", LazyHeaders.Builder()
+        .addHeader("Authorization", token)      //tenemos que incluir el token en el header.
+        .build()))
+    .into(imageView) // Renderiza la imagen en el ImageView
+      */
+
             }
         }
     }
