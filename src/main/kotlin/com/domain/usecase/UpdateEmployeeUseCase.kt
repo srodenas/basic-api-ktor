@@ -8,11 +8,22 @@ class UpdateEmployeeUseCase (val repository : EmployeeInterface){
     var updateEmployee: UpdateEmployee? = null
     var dni: String? = null
 
-    suspend operator fun invoke() : Boolean {
+    suspend operator fun invoke() : Employee? {
         return if (updateEmployee == null || dni == null) {
-            false
+            null
         }else{
-            return repository.updateEmployee(updateEmployee!!, dni!!)
+            /*
+            Para actualizar, primero tenemos que ver si tiene imagen para modificar.
+            1 - Si tiene imagen a modificar, hay que eliminarla físicamente.
+              - Hay que crear la nueva imagen, igual que hemos hecho en el insert.
+              - Hay que modificar el nombre del atributo, con el nuevo nombre.
+             */
+            updateEmployee!!.urlImage.let{
+
+            }
+            val employee= repository.updateEmployee(updateEmployee!!, dni!!)
+
+            employee
         }
 
     }

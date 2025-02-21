@@ -151,12 +151,12 @@ fun Route.employeeRouting(){
                     val dni = call.parameters["employeeDni"]
                     dni?.let{
                         val updateEmployee = call.receive<UpdateEmployee>()
-                        val res = ProviderUseCase.updateEmployee(updateEmployee, dni)
-                        if (! res){
+                        val update = ProviderUseCase.updateEmployee(updateEmployee, dni)
+                        if (update==null){
                             call.respond(HttpStatusCode.Conflict, "El empleado no pudo modificarse. Puede que no exista")
                             return@patch //aunque no es necesario, es buena práctica ponerlo para no olvidarlo, pero no hay más lógica.
                         }
-                        call.respond(HttpStatusCode.Created, "Se ha actualizado correctamente con dni =  ${dni}")
+                        call.respond(HttpStatusCode.Created, update)
                     }?: run{
                         call.respond(HttpStatusCode.BadRequest,"Debes identificar el empleado")
                         return@patch //aunque no es necesario, es buena práctica ponerlo para no olvidarlo, pero no hay más lógica.

@@ -21,7 +21,7 @@ interface EmployeeInterface {
 
     suspend fun postEmployee(employee: Employee) : Employee ?
 
-    suspend fun updateEmployee(employee: UpdateEmployee, dni:String) : Boolean
+    suspend fun updateEmployee(employee: UpdateEmployee, dni:String) : Employee?
 
     suspend fun deleteEmployee(dni : String) : Boolean
 
