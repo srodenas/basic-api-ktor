@@ -1,5 +1,6 @@
 package com.domain.usecase
 
+import com.domain.infraestructure.Utils
 import com.domain.models.Employee
 import com.domain.models.Salary
 import com.domain.models.UpdateEmployee
@@ -24,7 +25,7 @@ class RegisterUseCase(val repository: EmployeeInterface) {
                 else {
                     val reg = repository.register(employee)  //registro el nuevo employee
                     reg?.let{
-                        createDir (it.dni)  //creamos directorio con el dni, siempre y cuando no exista.
+                        Utils.createDir(it.dni)  //creamos directorio con el dni, siempre y cuando no exista.
                     }
                     reg  //devuelvo el employee creado o nulo si no se ha podido crear.
 
@@ -37,22 +38,5 @@ class RegisterUseCase(val repository: EmployeeInterface) {
 
     }
 
-    private fun createDir(dni: String) :Boolean{
-        try{
-            val path = ApplicationContext.context.environment.config.property("ktor.path.images").getString()
-            val dir = File(path, dni)
-            return if (!dir.exists()){
-                val created = dir.mkdirs()
-                if (created)
-                    true
-                else
-                    false
-            }
-            else
-                false
-        }catch (e:Exception){
-            e.printStackTrace()
-            return false
-        }
-    }
+
 }

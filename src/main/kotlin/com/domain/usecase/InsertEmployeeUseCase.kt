@@ -1,5 +1,6 @@
 package com.domain.usecase
 
+import com.domain.infraestructure.Utils
 import com.domain.models.Employee
 import com.domain.repository.EmployeeInterface
 import com.ktor.ApplicationContext
@@ -30,7 +31,7 @@ class InsertEmployeeUseCase  (val repository : EmployeeInterface){
         else{
             val img = employee!!.urlImage
             img?.let{
-                employee!!.urlImage = createBase64ToImg(it, employee!!.dni)  //creamos la imagen, a partir del Base64 y devolvemos su http
+                employee!!.urlImage = Utils.createBase64ToImg(it, employee!!.dni)  //creamos la imagen, a partir del Base64 y devolvemos su http
             }
             //aquí tengo que tener la imagen creada y el name en employee!!.urlImage
             val new = repository.postEmployee(employee!!)
@@ -44,7 +45,7 @@ class InsertEmployeeUseCase  (val repository : EmployeeInterface){
     /*
     Esta función, recibe el base64 u otra cosa.
      */
-    private fun createBase64ToImg(img: String , dni: String) : String?{
+    /*private fun createBase64ToImg(img: String , dni: String) : String?{
         val groupExtension = listOf("jpg", "jpeg", "gif")
         /*
         primer grupo. sacamos el tipo de la imagen.
@@ -88,5 +89,5 @@ class InsertEmployeeUseCase  (val repository : EmployeeInterface){
         } else null  // no se ha creado la imagen, por tanto retornamos null
 
     }
-
+*/
 }

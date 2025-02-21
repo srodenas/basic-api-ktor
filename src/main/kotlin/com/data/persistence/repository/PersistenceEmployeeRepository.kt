@@ -126,28 +126,30 @@ class PersistenceEmployeeRepository: EmployeeInterface {
 
 
 
-    override suspend fun updateEmployee(employee: UpdateEmployee, dni: String): Boolean {
+    override suspend fun updateEmployee(updateEmployee: UpdateEmployee, dni: String): Employee? {
         var num = 0
         try {
             suspendTransaction {
                 num = EmployeeTable
                     .update({ EmployeeTable.dni eq dni }) { stm ->
-                        employee.name?.let { stm[name] = it }
-                        employee.salary?.let { stm[salary] = it.toString() }
-                        employee.phone?.let { stm[phone] = it }
-                        employee.urlImage?.let { stm[urlImage] = it }
-                        employee.token?.let { stm[token] = it }
-                        employee.description?.let { stm[description] = it }
-                        employee.disponible?.let { stm[disponible] = it }
+                        updateEmployee.name?.let { stm[name] = it }
+                        updateEmployee.salary?.let { stm[salary] = it.toString() }
+                        updateEmployee.phone?.let { stm[phone] = it }
+                        updateEmployee.urlImage?.let { stm[urlImage] = it }
+                        updateEmployee.token?.let { stm[token] = it }
+                        updateEmployee.description?.let { stm[description] = it }
+                        updateEmployee.disponible?.let { stm[disponible] = it }
 
                     }
             }
+            updateEmployee.toEmployee()  //devolvemos el empleado modificado
 
         } catch (e: Exception) {
             e.printStackTrace()
-            false
+            return null //ha pasado algo y no se ha modificado.
         }
-        return num == 1
+        return null
+
     }
 
 

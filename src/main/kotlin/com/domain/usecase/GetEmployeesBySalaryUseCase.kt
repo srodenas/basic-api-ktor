@@ -13,11 +13,10 @@ class GetEmployeesBySalaryUseCase (val repository : EmployeeInterface) {
             val list = repository.getEmployeeBySalary(it)
             list.map{
                 emp->
-                    emp.urlImage?.let{
-                        imageName ->
+                    if (!emp.urlImage.isNullOrBlank()){
                             val local = ApplicationContext.context.environment.config.property("ktor.urlPath.baseUrl").getString()
                             val relativePath = ApplicationContext.context.environment.config.property("ktor.path.images").getString()
-                            emp.urlImage = "$local/$relativePath/imageName"
+                            emp.urlImage = "$local/$relativePath/${emp.urlImage}"
                     }
                 emp
             }
