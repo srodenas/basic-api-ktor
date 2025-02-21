@@ -40,10 +40,11 @@ class Utils {
                         val fileImag = File(nameFile)  //creamos el fichero con el nombre y donde queremos.
                         //ya podemos crear el fichero.
                         ImageIO.write(bufferImage, ext, fileImag)
-                        val local = ApplicationContext.context.environment.config.property("ktor.urlPath.baseUrl").getString()
-                        val relativePath = ApplicationContext.context.environment.config.property("ktor.path.images").getString()
-                        val urlImage = "$local/$relativePath/$nameFile"
-                        return urlImage  //se ha creado la imagen y por tanto devolvemos la ubicación y su nombre
+                       // val local = ApplicationContext.context.environment.config.property("ktor.urlPath.baseUrl").getString()
+                       // val relativePath = ApplicationContext.context.environment.config.property("ktor.path.images").getString()
+                       // val urlImage = "$local/$relativePath/$nameFile"
+                       // return urlImage  //se ha creado la imagen y por tanto devolvemos la ubicación y su nombre
+                        return nameFile
                     }else{
                         return null  //no existe el directorio, por tanto al haber un error se devuelve null
                     }
@@ -55,11 +56,23 @@ class Utils {
 
         }
 
+        fun getNameFileBase64(img: String){
+
+        }
+
         //todo
         fun deleteImage(dni: String, name: String):Boolean{
             try{
-                val path = ApplicationContext.context.environment.config.property("ktor.path.images").getString()
-                return true
+                val path = "${ApplicationContext.context.environment.config.property("ktor.path.images").getString()}/$dni"
+                val img = File(path, name)
+                return if (img.exists()){
+                            img.delete()
+                            true
+                }
+                else
+                    false
+
+
             }catch (e: Exception){
                 e.printStackTrace()
                 return false

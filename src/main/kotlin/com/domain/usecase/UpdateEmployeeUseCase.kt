@@ -1,5 +1,6 @@
 package com.domain.usecase
 
+import com.domain.infraestructure.Utils
 import com.domain.models.Employee
 import com.domain.models.UpdateEmployee
 import com.domain.repository.EmployeeInterface
@@ -18,12 +19,20 @@ class UpdateEmployeeUseCase (val repository : EmployeeInterface){
               - Hay que crear la nueva imagen, igual que hemos hecho en el insert.
               - Hay que modificar el nombre del atributo, con el nuevo nombre.
              */
-            updateEmployee!!.urlImage.let{
+            try {
+                var newImagenUrl :String? = null
+                updateEmployee!!.urlImage?.let {
+                    val res = Utils.deleteImage(updateEmployee!!.dni!!, it)  //la eliminamos.
+                    newImagenUrl = Utils.createBase64ToImg(it, updateEmployee!!.dni!!)
 
+                }
+                updateEmployee!!.urlImage = newImagenUrl  //actualizamos la imagen.
+                val employee = repository.updateEmployee(updateEmployee!!, dni!!)
+                employee
+            }catch (e: Exception){
+                e.printStackTrace()
+                null
             }
-            val employee= repository.updateEmployee(updateEmployee!!, dni!!)
-
-            employee
         }
 
     }

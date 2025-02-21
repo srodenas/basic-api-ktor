@@ -23,7 +23,7 @@ class LoginUseCase (val repository : EmployeeInterface){
             em!!.token = JwtConfig.generateToken(em.dni)  //genero un nuevo token
             val updateEmployee = em.toUpdateEmployee()  //actualiamos el token del employee
             val res = repository.updateEmployee(updateEmployee, dni)  //actualizamos el usuario con el token cambiado.
-            return if (res) //si la actualización ha sido acertada
+            return if (res!=null) //si la actualización ha sido acertada
                 updateEmployee.toEmployee()  //devolvemos el employee. El mapping es seguro!!!!.
             else
                 null

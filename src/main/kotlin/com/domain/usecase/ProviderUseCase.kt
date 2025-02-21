@@ -1,6 +1,5 @@
 package com.domain.usecase
 
-import com.data.inmemory.repository.MemoryEmployeeRepository
 import com.data.persistence.repository.PersistenceEmployeeRepository
 import com.domain.models.*
 
@@ -60,10 +59,10 @@ object ProviderUseCase {
         return new
     }
 
-    suspend fun updateEmployee(updateEmployee: UpdateEmployee?, dni : String) : Boolean{
+    suspend fun updateEmployee(updateEmployee: UpdateEmployee?, dni : String) : Employee?{
         if (updateEmployee == null){
             logger.warn("No existen datos del empleado a actualizar")
-            return false
+            return null
         }
 
         updateEmployeeUseCase.updateEmployee = updateEmployee
