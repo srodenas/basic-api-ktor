@@ -17,9 +17,10 @@ class GetEmployeByDniUseCase (val repository : EmployeeInterface) {
                     if (!emp.urlImage.isNullOrBlank()) {
                         val local =
                             ApplicationContext.context.environment.config.property("ktor.urlPath.baseUrl").getString()
-                        val relativePath =
-                            ApplicationContext.context.environment.config.property("ktor.path.images").getString()
-                        emp.urlImage = "$local/$relativePath/${emp.urlImage}"
+                       // val relativePath =
+                           // ApplicationContext.context.environment.config.property("ktor.path.images").getString()
+                        val relativePath = ApplicationContext.context.environment.config.property("ktor.urlPath.images").getString()
+                        emp.urlImage = "$local/$relativePath/$dni/${emp.urlImage}"
                     }
                 }
                 return emp
