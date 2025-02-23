@@ -1,0 +1,152 @@
+{
+	"info": {
+		"_postman_id": "30ce3f14-a61b-4eff-8208-e92ad25ff667",
+		"name": "PRUEBA-KTOR-EMPLOYEE",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "23044149"
+	},
+	"item": [
+		{
+			"name": "empleado no encontrado",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:8081/employee/0000000",
+				"description": "empleado no encontrado"
+			},
+			"response": []
+		},
+		{
+			"name": "empleado encontrado",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:8081/employee/47000000",
+				"description": "Empleado encontrado"
+			},
+			"response": []
+		},
+		{
+			"name": "actualizar sólo descripcion",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"description\": \"He cambiado su descripcion\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8081/employee/23344334Z"
+			},
+			"response": []
+		},
+		{
+			"name": "todos empleados",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:8081/employee"
+			},
+			"response": []
+		},
+		{
+			"name": "empleado dni pasado por query",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/employee?dni=600123020",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"employee"
+					],
+					"query": [
+						{
+							"key": "dni",
+							"value": "600123020"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "filtro por salario",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/employee?salary=low",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"employee"
+					],
+					"query": [
+						{
+							"key": "salary",
+							"value": "low"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "insertar empleado",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n        \"name\": \"Santiago Rodenas Herráiz\",\n        \"dni\": \"47000000\",\n        \"password\" : \"$2a$12$nTeIMaCnIcvBJlug2YLwGOzVd9gB9bSYN7wZZnZL4/K\",\n        \"description\": \"A data analyst\",\n        \"salary\": \"HIGH\",\n        \"phone\": \"600123019\",\n        \"urlImage\": \"https://cdn.pixabay.com/photo/2023/05/27/19/15/call-center-8022155_960_720.jpg\",\n        \"disponible\": true,\n        \"token\": \"\"\n\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8081/employee"
+			},
+			"response": []
+		},
+		{
+			"name": "actualizar profesion y otros",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{      \n    \"description\": \"PSP/ANDROID PROGRAMER TEACHER\",\n    \"salary\": \"HIGH\",\n    \"phone\": \"658777777\"\n\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8081/employee/47000000"
+			},
+			"response": []
+		},
+		{
+			"name": "borrar un empleado",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": "http://localhost:8081/employee/47000000"
+			},
+			"response": []
+		}
+	]
+}
