@@ -36,8 +36,9 @@ class Utils {
                     val path : String = ApplicationContext.context.environment.config.property("ktor.path.images").getString() + "/$dni"
                     val dir = File(path)
                     if (dir.isDirectory){
-                        val nameFile: String = path+"/"+dni+"_${SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())}.$ext"
-                        val fileImag = File(nameFile)  //creamos el fichero con el nombre y donde queremos.
+                        val nFile: String = path+"/"
+                        val nameFile = dni+"_${SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())}.$ext"
+                        val fileImag = File(nFile+nameFile)  //creamos el fichero con el nombre y donde queremos.
                         //ya podemos crear el fichero.
                         ImageIO.write(bufferImage, ext, fileImag)
                        // val local = ApplicationContext.context.environment.config.property("ktor.urlPath.baseUrl").getString()
@@ -98,5 +99,19 @@ class Utils {
             }
         }
 
+        fun deleteDirectory(dni: String) : Boolean{
+            try{
+                val path = ApplicationContext.context.environment.config.property("ktor.path.images").getString()+"/$dni"
+                val dir = File(path)
+                if (dir.exists()){
+                    return dir.deleteRecursively()
+                }
+
+            }catch (e:Exception){
+                e.printStackTrace()
+                return false
+            }
+            return false
+        }
     }
 }

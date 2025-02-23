@@ -9,7 +9,7 @@ import io.ktor.server.routing.*
 import java.io.File
 
 fun Route.imgRouting(){
-    route("/images/{dni}/{imageName}") {
+    route("/images/{dni}/{image}") {
         authenticate("jwt-auth") {
 
             //todo probar código.

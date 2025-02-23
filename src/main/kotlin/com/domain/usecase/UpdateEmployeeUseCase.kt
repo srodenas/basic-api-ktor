@@ -20,13 +20,18 @@ class UpdateEmployeeUseCase (val repository : EmployeeInterface){
               - Hay que modificar el nombre del atributo, con el nuevo nombre.
              */
             try {
-                var newImagenUrl :String? = null
-                updateEmployee!!.urlImage?.let {
-                    val res = Utils.deleteImage(updateEmployee!!.dni!!, it)  //la eliminamos.
-                    newImagenUrl = Utils.createBase64ToImg(it, updateEmployee!!.dni!!)
-
-                }
-                updateEmployee!!.urlImage = newImagenUrl  //actualizamos la imagen.
+                updateEmployee?.urlImage?.let{  newImg->//siempre que haya una nueva imagen a insertar.
+                    //estoy dentro de la nueva imagen a crear.
+                    val employee = repository.getEmployeeByDni(dni!!)  //necesito el empleado, para la antigua imagen.
+                    employee?.let { employee ->
+                        employee.urlImage?.let{ oldImg->  //Si hay imagen antigua, me la cargo
+                            Utils.deleteImage(employee.dni, oldImg)  //la elimino.
+                        }
+                    }
+                    //ahora tengo que crear la nueva imagen.
+                    val newImagenUrl = Utils.createBase64ToImg(newImg, dni!!)
+                    updateEmployee!!.urlImage = newImagenUrl
+                }//fin de si hay nueva imagen a insertar.
                 val employee = repository.updateEmployee(updateEmployee!!, dni!!)
                 employee
             }catch (e: Exception){

@@ -7,6 +7,7 @@ import com.domain.usecase.ProviderUseCase
 import com.domain.usecase.ProviderUseCase.logger
 import com.ktor.routing.authRouting
 import com.ktor.routing.employeeRouting
+import com.ktor.routing.imgRouting
 import io.ktor.http.*
 import io.ktor.serialization.*
 import io.ktor.server.application.*
@@ -24,6 +25,7 @@ fun Application.configureRouting() {
 
         authRouting()  //rutas para el login y el registro
         employeeRouting()  //rutas que serán protegidas.
+        imgRouting()  //rutas sólo para las imágenes protegidas.
 
         // Static plugin. Try to access `/static/index.html`
         staticResources("/static", "static")

@@ -13,6 +13,8 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.imageio.ImageIO
 
+//todo
+//método que sólo debería de implementar el administrador.
 
 class InsertEmployeeUseCase  (val repository : EmployeeInterface){
 
@@ -30,9 +32,15 @@ class InsertEmployeeUseCase  (val repository : EmployeeInterface){
         return if (em!=null)    null
         else{
             val img = employee!!.urlImage
-            img?.let{
-                employee!!.urlImage = Utils.createBase64ToImg(it, employee!!.dni)  //creamos la imagen, a partir del Base64 y devolvemos su http
+            if (!img.isNullOrBlank()){
+                val isCreateDir = Utils.createDir(employee!!.dni)
+                if (isCreateDir){
+                    employee!!.urlImage = Utils.createBase64ToImg(img, employee!!.dni)  //creamos la imagen, a partir del Base64 y devolvemos su http
+                }else{
+                    throw IllegalStateException("No se pudo crear el directorio del empleado. Puede que ya exista")
+                }
             }
+
             //aquí tengo que tener la imagen creada y el name en employee!!.urlImage
             val new = repository.postEmployee(employee!!)
             return new

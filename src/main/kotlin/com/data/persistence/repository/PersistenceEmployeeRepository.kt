@@ -142,14 +142,13 @@ class PersistenceEmployeeRepository: EmployeeInterface {
 
                     }
             }
-            updateEmployee.toEmployee()  //devolvemos el empleado modificado
+            return getEmployeeByDni(dni)  //devuelvo todos los datos de ese empleado. Esto puede cambiarse.
+         //   return updateEmployee.toEmployee()  //devolvemos el empleado modificado
 
         } catch (e: Exception) {
             e.printStackTrace()
             return null //ha pasado algo y no se ha modificado.
         }
-        return null
-
     }
 
 

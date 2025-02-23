@@ -23,18 +23,19 @@ class RegisterUseCase(val repository: EmployeeInterface) {
         return if (repository.login(employee.dni!!, employee.password!!)!=null)
                     null
                 else {
-                    val reg = repository.register(employee)  //registro el nuevo employee
-                    reg?.apply{ //modifico el registrado, en caso de que no sea null
-                        val isCreate = Utils.createDir(dni)   //creamos directorio con el dni, siempre y cuando no exista.
+                  //  val reg = repository.register(employee)  //registro el nuevo employee
+                    employee.apply{ //modifico el registrado, en caso de que no sea null
+                        val isCreate = Utils.createDir(dni!!)   //creamos directorio con el dni, siempre y cuando no exista.
                         if (isCreate){
-                            urlImage?.let{ img->  //dentro del apply, estoy en el contexto de reg, por tanto sobra.
-                                urlImage = Utils.createBase64ToImg(img, dni) //devuelve el nombre de la imagen ya creada a partir del base64
+                            if (!urlImage.isNullOrBlank()){
+                                urlImage = Utils.createBase64ToImg(urlImage!!, dni!!)
                             }
                         }else
-                            throw IllegalStateException("No se pudo crear el directorio del empleado")
+                            throw IllegalStateException("No se pudo crear el directorio del empleado. Puede que ya exista")
 
                     }
-                    reg  //devuelvo el employee creado o nulo si no se ha podido crear.
+                    val reg  = repository.register(employee)//devuelvo el employee creado o nulo si no se ha podido crear.
+                    reg
 
 
                  /*   val isDir = createDir("11111112")
