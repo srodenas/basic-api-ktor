@@ -20,10 +20,6 @@ class InsertEmployeeUseCase  (val repository : EmployeeInterface){
 
     var employee : Employee? = null
 
-    //todo. Recibo los datos del employee. Saco el fichero, si lo tiene.
-    //todo. Decodifico la imagen y persisto en Employee
-    //todo. Si la imagen, ya existe hay que sobreescribirla.
-    //todo. debo mandar en new.urlImage, la url completa a partir de pathUrl
     suspend operator fun invoke() : Employee ? {
         /*
         Si devuelve null, es que ya existe el empleado
@@ -31,18 +27,26 @@ class InsertEmployeeUseCase  (val repository : EmployeeInterface){
         val em = repository.getEmployeeByDni(employee!!.dni)
         return if (em!=null)    null
         else{
-            val img = employee!!.urlImage
-            if (!img.isNullOrBlank()){
-                val isCreateDir = Utils.createDir(employee!!.dni)
-                if (isCreateDir){
+            val isCreateDir = Utils.createDir(employee!!.dni)  //creamos su directorio
+            if (isCreateDir){
+                val img = employee!!.urlImage
+                if (!img.isNullOrBlank()){  //Si tiene imagen, hay que crearla.
                     employee!!.urlImage = Utils.createBase64ToImg(img, employee!!.dni)  //creamos la imagen, a partir del Base64 y devolvemos su http
-                }else{
-                    throw IllegalStateException("No se pudo crear el directorio del empleado. Puede que ya exista")
                 }
+            }else{
+                throw IllegalStateException("No se pudo crear el directorio del empleado. Puede que ya exista")
             }
 
-            //aquí tengo que tener la imagen creada y el name en employee!!.urlImage
-            val new = repository.postEmployee(employee!!)
+            val new = repository.postEmployee(employee!!)  //insertamos el employee
+
+            new?.let{  emp->
+                     if (!emp.urlImage.isNullOrBlank())   { //Debemos setear la url correctamente.
+                         val local = ApplicationContext.context.environment.config.property("ktor.urlPath.baseUrl").getString()
+                         val relativePath = ApplicationContext.context.environment.config.property("ktor.urlPath.images").getString()
+                         new.urlImage = "$local/$relativePath/${new?.dni}/${emp.urlImage}"
+                     }
+            }
+
             return new
         }
 

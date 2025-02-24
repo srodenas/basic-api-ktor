@@ -73,7 +73,6 @@ class Utils {
                 else
                     false
 
-
             }catch (e: Exception){
                 e.printStackTrace()
                 return false

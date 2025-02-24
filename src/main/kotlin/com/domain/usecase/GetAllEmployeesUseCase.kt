@@ -13,8 +13,8 @@ class GetAllEmployeesUseCase (val repository : EmployeeInterface){
             emp->  //para cada empleado
                 if (!emp.urlImage.isNullOrBlank()){  //si la imagen no es nula
                         val local = ApplicationContext.context.environment.config.property("ktor.urlPath.baseUrl").getString()
-                        val relativePath = ApplicationContext.context.environment.config.property("ktor.path.images").getString()
-                        emp.urlImage = "$local/$relativePath/$emp.urlImage"
+                        val relativePath = ApplicationContext.context.environment.config.property("ktor.urlPath.images").getString()
+                        emp.urlImage = "$local/$relativePath/${emp.dni}/${emp.urlImage}"
             }
             emp
         }
