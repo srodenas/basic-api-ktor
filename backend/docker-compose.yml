@@ -1,35 +1,65 @@
-version: "3.1"
-services:
-    db:
-        image: mariadb:latest
+    version: "3.8"
+    services:
+        api:
+            build:     #Le dice a Docker, que hay que construirla primero, antes de lanzarla.
+                context: ..   #El DockerFile, está en la carpeta inferior
 
-        ports: 
-            - "3306:3306"
-        command: --default-authentication-plugin=mysql_native_password
-        environment:
-            MYSQL_DATABASE: dbEmployee
-            MYSQL_USER: santi  #usuario santi
-            MYSQL_PASSWORD: santi #contraseña del usuario santi
-            MYSQL_ROOT_PASSWORD: santiago #contraseña del root
-        volumes:
-            - ./dump:/docker-entrypoint-initdb.d
-            - ./conf:/etc/mysql/conf.d
-            - persistent:/var/lib/mysql
-        networks:
-            - default
+            container_name: srodenas-api-ktor
+            ports:
+                - "8081:8081"
+            depends_on:
+                db:
+                    condition: service_healthy  #Tenemos que esperar a que MariaDB se arranque primero.
 
-    phpmyadmin:
-        image: phpmyadmin/phpmyadmin
+            environment:
+                DATABASE_URL: "jdbc:mariadb://db:3306/dbEmployee"
+                DATABASE_USER: "santi"
+                DATABASE_PASSWORD: "santi"
+            networks:
+                - ktor-network
 
-        depends_on:
-            - db
-        ports:
-            - 8000:80
-        environment:
-            PMA_HOST: db
-            MYSQL_ROOT_PASSWORD: santiago #contraseña del root
-volumes:
-    persistent:
 
-#docker-compose down -v  para que borre también los volúmenes en el caso de que quiera volver a lanzarlo.
-#docker-compose up -d
+        db:
+            image: mariadb:latest
+            container_name: ktor-mariadb
+            restart: always  #queremos que se reinicie, si Docker se reinicia.
+
+            ports:
+                - "3306:3306"
+            command: --default-authentication-plugin=mysql_native_password
+            environment:
+                MYSQL_DATABASE: dbEmployee
+                MYSQL_USER: santi  #usuario santi
+                MYSQL_PASSWORD: santi #contraseña del usuario santi
+                MYSQL_ROOT_PASSWORD: santiago #contraseña del root
+            volumes:
+                - ./dump:/docker-entrypoint-initdb.d
+                - ./conf:/etc/mysql/conf.d
+                - persistent:/var/lib/mysql
+            networks:
+                - ktor-network
+
+        phpmyadmin:
+            image: phpmyadmin/phpmyadmin
+            container_name: ktor-phpmyadmin
+            restart: always   #queremos que se reinicie, si Docker se reinicia.
+
+            depends_on:
+                db:
+                    condition: service_healthy  #Tenemos que esperar a que MariaDB se arranque primero.
+            ports:
+                - 8000:80
+            environment:
+                PMA_HOST: db
+                MYSQL_ROOT_PASSWORD: santiago #contraseña del root
+            networks:
+                - ktor-network
+
+    networks:
+        ktor-network:
+            driver: bridge
+    volumes:
+        persistent:
+
+    #docker-compose down -v    #para que borre también los volúmenes en el caso de que quiera volver a lanzarlo.
+    #docker-compose up -d  --build   #para levantarlos, pero que construya antes la de la api.
