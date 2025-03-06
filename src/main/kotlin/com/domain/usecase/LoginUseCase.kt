@@ -5,13 +5,14 @@ import com.domain.mapper.toUpdateEmployee
 import com.domain.models.Employee
 import com.domain.repository.EmployeeInterface
 import com.domain.security.JwtConfig
+import com.ktor.ApplicationContext
 
-            /*
-                zona de token.
-                1.- Debo generar un token de usuario
-                2.- Debo de actualizar el token en dicho usuario
-                3.- Debo devolver el token.
-                 */
+/*
+    zona de token.
+    1.- Debo generar un token de usuario
+    2.- Debo de actualizar el token en dicho usuario
+    3.- Debo devolver el token.
+     */
 
 class LoginUseCase (val repository : EmployeeInterface){
     suspend operator fun invoke(dni: String ?, pass:String ?): Employee ? {
@@ -22,6 +23,11 @@ class LoginUseCase (val repository : EmployeeInterface){
 
             em!!.token = JwtConfig.generateToken(em.dni)  //genero un nuevo token
             val updateEmployee = em.toUpdateEmployee()  //actualiamos el token del employee
+            if (! updateEmployee.urlImage.isNullOrBlank()){
+                val local = ApplicationContext.context.environment.config.property("ktor.urlPath.baseUrl").getString()
+                val relativePath = ApplicationContext.context.environment.config.property("ktor.urlPath.images").getString()
+                updateEmployee.urlImage = "$local/$relativePath/${updateEmployee.dni}/${updateEmployee.urlImage}"
+            }
             val res = repository.updateEmployee(updateEmployee, dni)  //actualizamos el usuario con el token cambiado.
             return if (res!=null) //si la actualización ha sido acertada
                 updateEmployee.toEmployee()  //devolvemos el employee. El mapping es seguro!!!!.

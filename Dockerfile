@@ -1,5 +1,7 @@
 #Utilizamos la imagen de Grandle con JDK 21 (lo tenemos igual en settings/grandle
 FROM gradle:8-jdk21 AS build
+#Crea la imagen final utilizando una version ligera.
+FROM openjdk:21-jdk-slim
 
 #Definimos el directorio de trabajo dentro del contenedor y es app, para que contenga los ficheros de la api
 #    Habrá que copiar todo lo que tenga el proyecto local a la carpeta /app del contenedor.
@@ -19,8 +21,7 @@ COPY . .
 #  por tanto, nos queda el ejecutable algo como /app/build/install/srodenas-sample-employee2/bin/srodenas-sample-employee2
 RUN gradle clean installDist
 
-#Crea la imagen final utilizando una version ligera.
-FROM openjdk:21-jdk-slim
+
 
 #Definimos el directorio app, donde se ejecutará la aplicación.
 WORKDIR /app
