@@ -4,7 +4,7 @@
             build:     #Le dice a Docker, que hay que construirla primero, antes de lanzarla.
                 context: ..   #El DockerFile, está en la carpeta inferior
 
-            container_name: srodenas-api-ktor
+            container_name: api-employee-ktor
             ports:
                 - "8081:8081"
             depends_on:
@@ -38,6 +38,13 @@
                 - persistent:/var/lib/mysql
             networks:
                 - ktor-network
+
+            healthcheck:
+                test: ["CMD", "mariadb-admin", "ping", "-h", "localhost"]
+                interval: 10s
+                retries: 5
+                start_period: 10s
+                timeout: 5s
 
         phpmyadmin:
             image: phpmyadmin/phpmyadmin

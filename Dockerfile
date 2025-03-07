@@ -1,13 +1,20 @@
 #La construcción del contenedor, se llevará en dos etapas.
-#Primera etapa, es la preparación del grandle con la versión que necesitamos. Para ello,
-#Tenemos que descargarnos una versión de grandle determinada, porque no existe una imagen para
-# la 8.4 que es la que necesitamos.
+#Primera etapa, es la preparación del grandle con la versión que necesitamos. Por defecto, la versión
+#gradle:8-jdk19, que era la que utilizamos en la primera versión de este dockerfile, da error porque esta api
+#necesita minimo una 8.3. Por tanto, hay que instalar a pelo la versión de gradle, que en mi caso es la 8.4
+
+
 #Una vez descargada e instalada la versión de gradle, debemos de copiar los ficheros de configuración
 #del gradle, descargar las dependencias y compilar el código fuente.
-#
+
 
 #Segunda etapa, es copiar todo lo hecho en la primera etapa, a una nueva imagen más liviana
 #donde tenga, sólo lo necesario para ser ejecutado.
+#Lo hacemos en dos etapas. Primera etapa, con una imagen para la compilación y una segunda imagen, que es la
+#que necesitaremos la ejecución de nuestra API.
+
+#Docker, descarta la primera etapa (primera imagen) y se queda con la segunda o última etapa(segunda imagen)
+#-----------------------------------------------
 
 #PRIMERA ETAPA.
 #Necesitamos instalar a mano una versión de gradle 8.4
@@ -51,7 +58,7 @@ RUN wget https://services.gradle.org/distributions/gradle-8.4-bin.zip -O /tmp/gr
 COPY build.gradle.kts settings.gradle.kts gradlew gradlew.bat ./
 
 
-#copiamos toda la carpeta gradle
+#copiamos toda la carpeta gradle. No nos complicamos la vida. Por si luego nos falta cualquier otra cosa.
 COPY gradle/ gradle/
 
 
@@ -77,9 +84,11 @@ RUN ./gradlew dependencies --no-daemon
 #directorio, como ha cambiado, volverá también a realizar de nuevo el siguiente paso, que es descargar dependencias y no
 #tirará de cache.
 
-COPY src src
+
 COPY upload upload
+RUN  chmod -R 777 upload  #para que pueda subir las imagenes.
 COPY backend backend
+COPY src src
 
 RUN ./gradlew clean installDist --no-daemon
 
@@ -103,3 +112,13 @@ EXPOSE 8081
 #   a /app/bin/ y ejecute el binario srodenas-sample-employee2
 #   cmd define el comando por defecto, a ejecutar cuando arranque el contenedor.
 CMD ["/app/bin/srodenas-sample-employee2"]
+
+#docker build -t mi-app .
+#docker run -p 8081:8081 --name api-employee-ktor srodenas-api-ktor
+
+#docker logs -f api-employee-ktor
+#docker stop api-employee-ktor
+#docker rm api-employee-ktor
+#docker rmi srodenas-api-ktor   #borro la imagen
+#docker-compose down -v    #para que borre también los volúmenes en el caso de que quiera volver a lanzarlo.
+#docker-compose up -d  --build   #para levantarlos, pero que construya antes la de la api.
