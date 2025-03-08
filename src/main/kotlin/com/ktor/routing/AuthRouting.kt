@@ -50,9 +50,12 @@ fun Route.authRouting(){
         post(){
             try{
                 val user = call.receive<UpdateEmployee>()
+                ProviderUseCase.logger.warn("Auth-registro: Recibo request.")
+
                 val register = ProviderUseCase.register(user)  //devuelvo un Employee registrado o null sino.
 
                 if (register != null) {
+                    ProviderUseCase.logger.warn("Auth-registro: Registra Ok.")
                     val upEmp = register.toUpdateEmployee()  //mapeamos a updateEmployee para la respuesta.
                     upEmp.msg = "Usuario con dni =  ${upEmp.dni}, registrado correctamente. Vuelva a loguearse"
                     call.respond(HttpStatusCode.Created, upEmp)
@@ -62,6 +65,7 @@ fun Route.authRouting(){
 
             } catch (e : IllegalStateException){
                 call.respond(HttpStatusCode.BadRequest, "Error en el formato de envío de datos o lectura del cuerpo.")
+                e.printStackTrace()
             } catch (e: JsonConvertException){
                 call.respond(HttpStatusCode.BadRequest," Problemas en la conversión json")
             }

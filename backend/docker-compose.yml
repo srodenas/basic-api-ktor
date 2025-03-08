@@ -1,6 +1,8 @@
     version: "3.8"
     services:
         api:
+            image:
+                img-srodenas-api-employee-ktor
             build:     #Le dice a Docker, que hay que construirla primero, antes de lanzarla.
                 context: ..   #El DockerFile, está en la carpeta inferior
 
@@ -10,7 +12,7 @@
             depends_on:
                 db:
                     condition: service_healthy  #Tenemos que esperar a que MariaDB se arranque primero.
-
+                    # Hasta que Docker, no marque al contenedor MAriaDB como healthy, api-employee-ktor no arranca.
             environment:
                 DATABASE_URL: "jdbc:mariadb://db:3306/dbEmployee"
                 DATABASE_USER: "santi"
@@ -39,6 +41,18 @@
             networks:
                 - ktor-network
 
+            #Puesto que hemos puesto a la api y phpmyadmin en service_healthy, el contenedor de MariaDb
+            #   debe ejecutar un healthcheck, que verifica si el servicio está funcionando correctatmente.
+            #   Es una prueba que me ha obligado a hacer.
+            # Hasta que Docker, no marque al contenedor MAriaDB como healthy, los otros contenedores no arrancarán.
+
+            #El contenedor antes de lanzarse, comprueba si MariaDB está funcionando
+            #Tiene que hacer una prueba dentro del contenedor en localhost.
+            #Para ello, realiza una serie de test. Dentro del contenedor, le hace un ping a
+            #   Hará el test cada 10 sg.
+            #   Lo hará 5 veces, en caso de que no conteste.
+            #   Se esperará 10s antes de empezar a realizar el test. Se supone que tarda un ratejo en arrancar:
+            #   Se espera 5sg a la respuesta, para considerarla fallida.
             healthcheck:
                 test: ["CMD", "mariadb-admin", "ping", "-h", "localhost"]
                 interval: 10s
@@ -54,6 +68,7 @@
             depends_on:
                 db:
                     condition: service_healthy  #Tenemos que esperar a que MariaDB se arranque primero.
+                    # Hasta que Docker, no marque al contenedor MAriaDB como healthy, ktor-phpmyadmin no arranca.
             ports:
                 - 8000:80
             environment:

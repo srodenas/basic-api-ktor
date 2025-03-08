@@ -9,6 +9,7 @@ import com.domain.models.Employee
 import com.domain.models.Salary
 import com.domain.models.UpdateEmployee
 import com.domain.repository.EmployeeInterface
+import com.domain.usecase.ProviderUseCase
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.update
@@ -181,6 +182,7 @@ class PersistenceEmployeeRepository: EmployeeInterface {
      */
     override suspend fun register(employee: UpdateEmployee): Employee? {
         // val em = getEmployeeByDni(employee.dni!!)?:return null
+        ProviderUseCase.logger.warn("Repository-Registro: Procedemos a registrar: ${employee}")
 
         return try {
             suspendTransaction {

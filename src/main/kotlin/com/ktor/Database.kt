@@ -1,5 +1,6 @@
 package com.ktor
 
+import com.domain.usecase.ProviderUseCase
 import io.ktor.server.application.*
 import org.jetbrains.exposed.sql.Database
 
@@ -29,6 +30,8 @@ fun Application.configureDatabases(){
             password = password
         )
         log.info ("He establecido bien la conexión")
+        ProviderUseCase.logger.warn("Init BBDD: Conexión BBDD establecida correctamente")
+
     }catch (e: Exception){
         log.error("Database connection failed: ${e.message}")
     }

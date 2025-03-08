@@ -113,12 +113,13 @@ EXPOSE 8081
 #   cmd define el comando por defecto, a ejecutar cuando arranque el contenedor.
 CMD ["/app/bin/srodenas-sample-employee2"]
 
-#docker build -t mi-app .
-#docker run -p 8081:8081 --name api-employee-ktor srodenas-api-ktor
-
+#docker build -t img-srodenas-api-employee-ktor .
+#docker run -p 8081:8081 --name api-employee-ktor img-srodenas-api-employee-ktor
 #docker logs -f api-employee-ktor
 #docker stop api-employee-ktor
+
+#docker logs -f api-employee-ktor
 #docker rm api-employee-ktor
-#docker rmi srodenas-api-ktor   #borro la imagen
+#docker rmi img-srodenas-api-employee-ktor   #borro la imagen
 #docker-compose down -v    #para que borre también los volúmenes en el caso de que quiera volver a lanzarlo.
 #docker-compose up -d  --build   #para levantarlos, pero que construya antes la de la api.
