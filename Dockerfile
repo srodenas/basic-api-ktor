@@ -19,8 +19,8 @@
 #PRIMERA ETAPA.
 #Necesitamos instalar a mano una versión de gradle 8.4
 #Debemos identificar la etapa como build, para que en la primera etapa, copie los ficheros compilados desde la primera etapa.
-FROM openjdk:19-jdk-slim AS build
-
+#FROM openjdk:19-jdk-slim AS build
+FROM arm64v8/openjdk:19-jdk-slim AS build
 
 #Definimos el directorio app, donde se ejecutará la aplicación.
 WORKDIR /app
@@ -30,6 +30,8 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y wget unzip \
     && rm -rf /var/lib/apt/lists/*
 
+# Instalar adduser y addgroup (si no están disponibles)
+RUN apt-get install -y --no-install-recommends passwd && rm -rf /var/lib/apt/lists/*
 
 #Necesitamos gradle 8.4. Lo descargamos y lo instalamos.
 # Descargar e instalar Gradle 8.4 manualmente
@@ -41,6 +43,8 @@ RUN wget https://services.gradle.org/distributions/gradle-8.4-bin.zip -O /tmp/gr
     && unzip /tmp/gradle.zip -d /opt/ \
     && ln -s /opt/gradle-8.4/bin/gradle /usr/local/bin/gradle \
     && rm -rf /tmp/gradle.zip
+
+
 
 
 
@@ -86,7 +90,12 @@ RUN ./gradlew dependencies --no-daemon
 
 
 COPY upload upload
-RUN  chmod -R 777 upload  #para que pueda subir las imagenes.
+
+# Crear usuario y grupo 'app' en la primera etapa
+RUN groupadd --system app && useradd --system -g app app
+
+RUN chown -R app:app upload && chmod -R 755 upload
+#RUN  chmod -R 777 upload  #para que pueda subir las imagenes.
 COPY backend backend
 COPY src src
 
@@ -96,14 +105,21 @@ RUN ./gradlew clean installDist --no-daemon
 #SEGUNDA ETAPA...... Creamos una nueva imagen limpia y copiamos lo necesario.
 FROM openjdk:19-jdk-slim
 WORKDIR /app
+
+ARG APP_NAME=srodenas-sample-employee2
 #Copiamos la aplicación compilada desde build a la imagen.
 #Solo copiamos los ficheros necesarios, tras la compilación generada en srodenas-sample-employee2
 #   que incluye tanto la carpeta bin/srodenas-sample-employee2  como la carpeta lib/ con los jar de las dependencias.
 #De la imagen llamada build, copiamos lo que hemos compilado.
-COPY --from=build /app/build/install/srodenas-sample-employee2 /app
+COPY --from=build /app/build/install/${APP_NAME}/ /app
 
+# Usuario no root
+RUN groupadd --system app && useradd --system -g app app
+
+#Usar el usuario no root. Debe ejecutarse con el usuario app
+USER app
 # Asegurar permisos de ejecución del binario.Solo para mac y linuyxl
-RUN chmod +x /app/bin/srodenas-sample-employee2
+#RUN chmod +x /app/bin/srodenas-sample-employee2
 
 #Nuestra aplicación correrá en el 8081
 EXPOSE 8081
