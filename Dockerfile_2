@@ -1,0 +1,120 @@
+
+#-----------------------------------------------
+#1.- Proceso de compilación y 2.- Proceso de imagen de ejecución límpia (runtime)
+# En la primera etapa, utilizamos la imagen con grandle 8.4 para generar la compilación de nuestro proyecto. Se necesita
+#   trabajar en un directorio que he llamado workspace, añadido un usuario y grupo add, para que el propietario de la carpeta upload
+#   no sea root, copiamos toda la carpeta grandle de nuestro proyecto, copiamos el script grandlew que es el que nos descargará las
+#   dependencias y nos gernerará la compilación, copiamos los ficheros de configuración de módulo y proyecto, damos permisos de
+#   ejecución al script grandlew, para que inice el script con los pasos de descarga de dependencias y compilación,
+#   --ejecutamos el script con la opción sólo de dependencias--, copiamos toda la carpeta src (código fuente), carpeta backend y
+#   volvemos a --ejecutar el script con la opción de compilación y empaquetado.
+#   Lo que genera la compilación es algo como:
+#/workspace/install/srodenas-sample-employee2
+#  ├── bin/
+#  │   └── srodenas-sample-employee2   # El ejecutable principal
+#  ├── lib/
+#  │   ├── dependency1.jar
+#  │   └── dependency2.jar
+#  └── upload/
+#  └── backend/
+
+
+
+#2.- En la segunda etapa, ya partimos de la anterior con todo el proceso de compilación. Ahora a partir de una imagen limpia, que
+#   incluya una runtime 17 de java, tenemos que copiar el paquete generado del proceso de compilación, donde lo tiene dentro de la
+#   carpeta workspace/build/install/srodenas-sample-employee2 y lo llevamos a la carpeta /app. Tener en cuenta, que ese nombre de paquete
+#   se encuentra dentro del properties que tenemos en el proyecto, settings.grandle.kts. Volvemos a crear el usuario y grupo app, porque
+#   queremos que la aplicación se ejecute con permisos de usuario app, no de root. Exponemos el contenedor al puerto 8081 e incluimos
+#   el comando que debe ejecutar el contenedor, cuando éste ya está cargado que es ejecutar la aplicación /app/bin/srodenas-sample-employee2
+
+FROM gradle:8.4-jdk17-alpine AS build
+
+
+#Definimos el directorio donde se ejecutará instalará grandle.
+WORKDIR /workspace
+
+# Crear usuario y grupo 'app' en la primera etapa
+RUN addgroup -S app && adduser -S app -G app
+
+# Cache de dependencias
+#copiamos la carpeta grandle completa
+COPY ../../../../../../../../../Desktop/employee-api%20para%20raspi/srodenas-sample-employee2/gradle gradle
+#Copia el fichero grandlew (script de linux/mac) al directorio workspace
+COPY ../../../../../../../../../Desktop/employee-api%20para%20raspi/srodenas-sample-employee2/gradlew .
+#build.gradle.kts de  modulo, proyecto y properties como archivos de configuración
+COPY ../../../../../../../../../Desktop/employee-api%20para%20raspi/srodenas-sample-employee2/settings.gradle.kts build.gradle.kts gradle.properties* ./
+
+#Damos los permisos de ejecución al script gradlew en el caso de linux/mac.
+RUN chmod +x gradlew
+
+#Este script, descarga las dependencias que necesita el proyecto.
+RUN ./gradlew --no-daemon dependencies || true
+
+#Por último, debemos de compilar nuestro código fuente.
+#   installDist es la tarea de Grandle, que coge el src y lo compila, dejando un paquete ejecutable,
+#   llamado srodenas-sample-employee2 en build/install/srodenas-sample-employee2/bin/ y
+#  en /build/install/srodenas-sample-employee2/lib, los jar de las dependencias que hay definidas en el grandle.
+#  por tanto, nos queda el ejecutable algo como /app/build/install/srodenas-sample-employee2/bin/srodenas-sample-employee2
+
+#Copiamos el src. Lo copiamos después, para que no vuelva a repetir los pasos anteriores.
+#Como son capas, si copiamos primero el src, se ejcutará dicha capa y después se descargará las dependencias
+#en el siguiente paso, por tanto, en el caso de que volvamos a modificar e incluir otro copy, aunque sea un simple
+#directorio, como ha cambiado, volverá también a realizar de nuevo el siguiente paso, que es descargar dependencias y no
+#tirará de cache.
+
+COPY src src
+
+#Copiamos la carpeta upload de imagenes
+COPY upload upload
+
+RUN chown -R app:app upload && chmod -R 755 upload
+#RUN  chmod -R 777 upload  #para que pueda subir las imagenes.
+
+#copiamos la carpeta backend completa.
+COPY backend backend
+
+
+#Limpia el proyecto y compila el proyecto. Lo empaqueta para que se pueda ejecutar.
+RUN ./gradlew clean installDist --no-daemon
+
+
+#SEGUNDA ETAPA...... NECESITAMOS LA RUNTIME ############
+#FROM eclipse-temurin:17-jre-alpine
+FROM arm64v8/eclipse-temurin:17-jre-alpine
+WORKDIR /app
+
+ARG APP_NAME=srodenas-sample-employee2
+
+#Copiamos la aplicación compilada desde build a la imagen.
+#Solo copiamos los ficheros necesarios, tras la compilación generada en srodenas-sample-employee2
+#   que incluye tanto la carpeta bin/srodenas-sample-employee2  como la carpeta lib/ con los jar de las dependencias.
+#De la imagen llamada build, copiamos lo que hemos compilado.
+COPY --from=build /workspace/build/install/${APP_NAME}/ /app
+
+# Usuario no root
+RUN addgroup -S app && adduser -S app -G app && chown -R app:app /app
+
+#Usar el usuario no root. Debe ejecutarse con el usuario app
+USER app
+
+# Asegurar permisos de ejecución del binario.Solo para mac y linuyxl
+#RUN chmod +x /app/bin/srodenas-sample-employee2
+
+#Nuestra aplicación correrá en el 8081
+EXPOSE 8081
+
+#Lo que copiamos en app, fue  /bin y /lib, por tanto le decimos que al arrancar el servidor, acceda
+#   a /app/bin/ y ejecute el binario srodenas-sample-employee2
+#   cmd define el comando por defecto, a ejecutar cuando arranque el contenedor.
+CMD ["/app/bin/srodenas-sample-employee2"]
+
+#docker build -t img-srodenas-api-employee-ktor:latest .
+#docker run -p 8081:8081 --name api-employee-ktor img-srodenas-api-employee-ktor
+#docker logs -f api-employee-ktor
+#docker stop api-employee-ktor
+
+#docker logs -f api-employee-ktor
+#docker rm api-employee-ktor
+#docker rmi img-srodenas-api-employee-ktor   #borro la imagen
+#docker-compose down -v    #para que borre también los volúmenes en el caso de que quiera volver a lanzarlo.
+#docker-compose up -d  --build   #para levantarlos, pero que construya antes la de la api.
