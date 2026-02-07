@@ -1,6 +1,7 @@
 services:
     api:
         image: img-srodenas-api-employee-ktor:latest
+        platform: linux/arm/v7
         build:
             context: ..
         container_name: api-employee-ktor
@@ -15,9 +16,12 @@ services:
             DATABASE_PASSWORD: "santi"
         networks:
             - ktor-network
+        restart: always
 
     db:
-        image: mariadb:latest
+        #image: mariadb:latest
+        image: yobasystems/alpine-mariadb:10.11
+        platform: linux/arm/v7
         container_name: ktor-mariadb
         restart: always
         ports:
@@ -42,7 +46,9 @@ services:
             timeout: 5s
 
     phpmyadmin:
-        image: phpmyadmin/phpmyadmin
+        #image: phpmyadmin/phpmyadmin
+        image: phpmyadmin:5.1.0-apache
+        platform: linux/arm/v7
         container_name: ktor-phpmyadmin
         restart: always
         depends_on:
