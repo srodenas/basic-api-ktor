@@ -1,35 +1,26 @@
-version: "3.1"
 services:
-    db:
-        image: mariadb:latest
-
-        ports: 
-            - "3306:3306"
-        command: --default-authentication-plugin=mysql_native_password
-        environment:
-            MYSQL_DATABASE: dbEmployee
-            MYSQL_USER: santi  #usuario santi
-            MYSQL_PASSWORD: santi #contraseña del usuario santi
-            MYSQL_ROOT_PASSWORD: santiago #contraseña del root
-        volumes:
-            - ./dump:/docker-entrypoint-initdb.d
-            - ./conf:/etc/mysql/conf.d
-            - persistent:/var/lib/mysql
-        networks:
-            - default
-
-    phpmyadmin:
-        image: phpmyadmin/phpmyadmin
-
-        depends_on:
-            - db
+    api:
+        image: img-srodenas-api-employee-ktor:v2
+        build:
+            context: ..
+        container_name: api-employee-ktor-v2
         ports:
-            - 8000:80
-        environment:
-            PMA_HOST: db
-            MYSQL_ROOT_PASSWORD: santiago #contraseña del root
-volumes:
-    persistent:
+            - "8082:8081"   # Mapeo el puerto 8082 de la raspi al puerto interno del contenedor 8081.
+            #Para todas las versiones de la api, el puerto interno será el mismo 8081.
 
-#docker-compose down -v  para que borre también los volúmenes en el caso de que quiera volver a lanzarlo.
-#docker-compose up -d
+        environment:
+            DATABASE_URL: "jdbc:mariadb://db:3306/dbEmployee_v2"
+            DATABASE_USER: "santi"
+            DATABASE_PASSWORD: "santi"
+        networks:
+            - ktor-network
+        restart: always # Queremos que se inice automaticamente al reinicio.
+
+networks:
+    ktor-network:
+        external: true
+        # Con external, indicamos que no cree la red, sino que se conecte a la que ya hay creada con el compose de la versión antigua.
+
+
+    #docker-compose down -v  para que borre también los volúmenes en el caso de que quiera volver a lanzarlo.
+    #docker-compose up -d

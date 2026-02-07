@@ -1,3 +1,25 @@
+#La construcción del contenedor, se llevará en dos etapas.
+#Primera etapa, es la preparación del grandle con la versión que necesitamos. Por defecto, la versión
+#gradle:8-jdk19, que era la que utilizamos en la primera versión de este dockerfile, da error porque esta api
+#necesita minimo una 8.3. Por tanto, hay que instalar a pelo la versión de gradle, que en mi caso es la 8.4
+
+
+#Una vez descargada e instalada la versión de gradle, debemos de copiar los ficheros de configuración
+#del gradle, descargar las dependencias y compilar el código fuente.
+
+
+#Segunda etapa, es copiar todo lo hecho en la primera etapa, a una nueva imagen más liviana
+#donde tenga, sólo lo necesario para ser ejecutado.
+#Lo hacemos en dos etapas. Primera etapa, con una imagen para la compilación y una segunda imagen, que es la
+#que necesitaremos la ejecución de nuestra API.
+
+#Docker, descarta la primera etapa (primera imagen) y se queda con la segunda o última etapa(segunda imagen)
+#-----------------------------------------------
+
+#PRIMERA ETAPA.
+#Necesitamos instalar a mano una versión de gradle 8.4
+#Debemos identificar la etapa como build, para que en la primera etapa, copie los ficheros compilados desde la primera etapa.
+#FROM openjdk:19-jdk-slim AS build
 FROM arm64v8/openjdk:19-jdk-slim AS build
 
 #Definimos el directorio app, donde se ejecutará la aplicación.
