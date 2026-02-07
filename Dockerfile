@@ -1,4 +1,26 @@
-FROM arm64v8/openjdk:19-jdk-slim AS build
+#La construcción del contenedor, se llevará en dos etapas.
+#Primera etapa, es la preparación del grandle con la versión que necesitamos. Por defecto, la versión
+#gradle:8-jdk19, que era la que utilizamos en la primera versión de este dockerfile, da error porque esta api
+#necesita minimo una 8.3. Por tanto, hay que instalar a pelo la versión de gradle, que en mi caso es la 8.4
+
+
+#Una vez descargada e instalada la versión de gradle, debemos de copiar los ficheros de configuración
+#del gradle, descargar las dependencias y compilar el código fuente.
+
+
+#Segunda etapa, es copiar todo lo hecho en la primera etapa, a una nueva imagen más liviana
+#donde tenga, sólo lo necesario para ser ejecutado.
+#Lo hacemos en dos etapas. Primera etapa, con una imagen para la compilación y una segunda imagen, que es la
+#que necesitaremos la ejecución de nuestra API.
+
+#Docker, descarta la primera etapa (primera imagen) y se queda con la segunda o última etapa(segunda imagen)
+#-----------------------------------------------
+
+#PRIMERA ETAPA.
+#Necesitamos instalar a mano una versión de gradle 8.4
+#Debemos identificar la etapa como build, para que en la primera etapa, copie los ficheros compilados desde la primera etapa.
+#Imagen que funciona en mi raspi ARM/v7 de 32 bits.
+FROM arm32v7/eclipse-temurin:17-jdk AS build
 
 #Definimos el directorio app, donde se ejecutará la aplicación.
 WORKDIR /app
@@ -8,9 +30,12 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y wget unzip \
     && rm -rf /var/lib/apt/lists/*
 
-# Instalar adduser y addgroup (si no están disponibles)
+#Necesitamos crearnos un usuario para la asignación de permisos a upload
 RUN apt-get update && apt-get install -y --no-install-recommends passwd \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && useradd -r -s /usr/sbin/nologin app
+
+
 #Necesitamos gradle 8.4. Lo descargamos y lo instalamos.
 # Descargar e instalar Gradle 8.4 manualmente
 #Con wget, descargamos la distribución 8.4
@@ -39,12 +64,8 @@ RUN wget https://services.gradle.org/distributions/gradle-8.4-bin.zip -O /tmp/gr
 # Para que no tenga que descargarse en caché, cada vez que construimos el contenedor. punto.
 COPY build.gradle.kts settings.gradle.kts gradlew gradlew.bat ./
 
-
 #copiamos toda la carpeta gradle. No nos complicamos la vida. Por si luego nos falta cualquier otra cosa.
 COPY gradle gradle/
-
-
-
 
 #Damos los permisos de ejecución al script gradlew en el caso de linux/mac.
 RUN chmod +x gradlew
@@ -66,11 +87,10 @@ RUN ./gradlew dependencies --no-daemon
 #directorio, como ha cambiado, volverá también a realizar de nuevo el siguiente paso, que es descargar dependencias y no
 #tirará de cache.
 
-
 COPY upload upload
 
 # Crear usuario y grupo 'app' en la primera etapa
-RUN groupadd --system app && useradd --system -g app app
+#RUN groupadd --system app && useradd --system -g app app
 
 RUN chown -R app:app upload && chmod -R 755 upload
 #RUN  chmod -R 777 upload  #para que pueda subir las imagenes.
@@ -81,7 +101,8 @@ RUN ./gradlew clean installDist --no-daemon
 
 
 #SEGUNDA ETAPA...... Creamos una nueva imagen limpia y copiamos lo necesario.
-FROM openjdk:19-jdk-slim
+#FROM openjdk:19-jdk-slim
+FROM arm32v7/eclipse-temurin:17-jre
 WORKDIR /app
 
 ARG APP_NAME=srodenas-sample-employee2
@@ -91,13 +112,14 @@ ARG APP_NAME=srodenas-sample-employee2
 #De la imagen llamada build, copiamos lo que hemos compilado.
 COPY --from=build /app/build/install/${APP_NAME}/ /app
 
-# Usuario no root
-RUN groupadd --system app && useradd --system -g app app
+#Creamos el usuario que se encargará de ejecutar la app.
+RUN apt-get update && apt-get install -y --no-install-recommends passwd \
+    && rm -rf /var/lib/apt/lists/* \
+    && useradd -r -s /usr/sbin/nologin app
 
 #Usar el usuario no root. Debe ejecutarse con el usuario app
 USER app
-# Asegurar permisos de ejecución del binario.Solo para mac y linuyxl
-#RUN chmod +x /app/bin/srodenas-sample-employee2
+
 
 #Nuestra aplicación correrá en el 8081
 EXPOSE 8081

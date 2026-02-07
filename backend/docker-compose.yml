@@ -9,7 +9,7 @@ services:
             #Para todas las versiones de la api, el puerto interno será el mismo 8081.
 
         environment:
-            DATABASE_URL: "jdbc:mariadb://db:3306/dbEmployee_v2"
+            DATABASE_URL: "jdbc:mariadb://db:3306/dbEmployee"
             DATABASE_USER: "santi"
             DATABASE_PASSWORD: "santi"
         networks:
@@ -18,8 +18,9 @@ services:
 
 networks:
     ktor-network:
-        external: true
-        # Con external, indicamos que no cree la red, sino que se conecte a la que ya hay creada con el compose de la versión antigua.
+        external:
+            name: backend_ktor-network
+        # No crees la red. Utiliza la que ya existe.
 
 
     #docker-compose down -v  para que borre también los volúmenes en el caso de que quiera volver a lanzarlo.
