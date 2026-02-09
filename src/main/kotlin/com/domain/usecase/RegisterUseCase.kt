@@ -6,6 +6,7 @@ import com.domain.models.Salary
 import com.domain.models.UpdateEmployee
 import com.domain.repository.EmployeeInterface
 import com.ktor.ApplicationContext
+import com.domain.usecase.ProviderUseCase.logger
 import java.io.File
 
 class RegisterUseCase(val repository: EmployeeInterface) {
@@ -24,9 +25,11 @@ class RegisterUseCase(val repository: EmployeeInterface) {
                     null
                 else {
                   //  val reg = repository.register(employee)  //registro el nuevo employee
+                    logger.warn("(RegisterUseCase)-->No existe y por tanto intentamos crearlo")
                     employee.apply{ //modifico el registrado, en caso de que no sea null
                         val isCreate = Utils.createDir(dni!!)   //creamos directorio con el dni, siempre y cuando no exista.
                         if (isCreate){
+                            logger.warn("(RegisterUseCase)-->Carpera creada correctamente")
                             if (!urlImage.isNullOrBlank()){
                                 urlImage = Utils.createBase64ToImg(urlImage!!, dni!!)
                             }
@@ -34,6 +37,7 @@ class RegisterUseCase(val repository: EmployeeInterface) {
                             throw IllegalStateException("No se pudo crear el directorio del empleado. Puede que ya exista")
 
                     }
+                    logger.warn("(RegisterUseCase)-->Procedemos a crear el usuario desde el repositorio")
                     val reg  = repository.register(employee)//devuelvo el employee creado o nulo si no se ha podido crear.
                     reg
 

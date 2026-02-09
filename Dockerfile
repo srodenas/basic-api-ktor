@@ -105,6 +105,8 @@ RUN ./gradlew clean installDist --no-daemon
 FROM arm32v7/eclipse-temurin:17-jre
 WORKDIR /app
 
+
+
 ARG APP_NAME=srodenas-sample-employee2
 #Copiamos la aplicación compilada desde build a la imagen.
 #Solo copiamos los ficheros necesarios, tras la compilación generada en srodenas-sample-employee2
@@ -116,6 +118,12 @@ COPY --from=build /app/build/install/${APP_NAME}/ /app
 RUN apt-get update && apt-get install -y --no-install-recommends passwd \
     && rm -rf /var/lib/apt/lists/* \
     && useradd -r -s /usr/sbin/nologin app
+
+
+#copio las carpetas.
+COPY --from=build /app/upload /upload
+RUN chown -R app:app /upload
+
 
 #Usar el usuario no root. Debe ejecutarse con el usuario app
 USER app

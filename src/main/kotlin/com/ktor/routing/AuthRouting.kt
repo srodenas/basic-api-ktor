@@ -5,6 +5,8 @@ import com.domain.mapper.toUpdateEmployee
 import com.domain.models.Employee
 import com.domain.models.UpdateEmployee
 import com.domain.usecase.ProviderUseCase
+import com.domain.usecase.ProviderUseCase.logger
+
 import io.ktor.http.*
 import io.ktor.serialization.*
 import io.ktor.server.request.*
@@ -53,6 +55,7 @@ fun Route.authRouting(){
                 val register = ProviderUseCase.register(user)  //devuelvo un Employee registrado o null sino.
 
                 if (register != null) {
+                    logger.warn("(AuthRouting)-->No existe y por tanto intentamos crearlo")
                     val upEmp = register.toUpdateEmployee()  //mapeamos a updateEmployee para la respuesta.
                     upEmp.msg = "Usuario con dni =  ${upEmp.dni}, registrado correctamente. Vuelva a loguearse"
                     call.respond(HttpStatusCode.Created, upEmp)
@@ -61,7 +64,7 @@ fun Route.authRouting(){
                     call.respond(HttpStatusCode.Conflict, "No se ha podido realizar el registro")
 
             } catch (e : IllegalStateException){
-                call.respond(HttpStatusCode.BadRequest, "Error en el formato de envío de datos o lectura del cuerpo.")
+                call.respond(HttpStatusCode.BadRequest, e.stackTraceToString())  //quitar en producción.
             } catch (e: JsonConvertException){
                 call.respond(HttpStatusCode.BadRequest," Problemas en la conversión json")
             }
