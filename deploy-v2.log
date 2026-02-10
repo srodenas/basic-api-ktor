@@ -1,0 +1,147 @@
+nohup: ignoring input
+/bin/bash: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8)
+🚀 Iniciando deploy v2...
+🛑 Deteniendo contenedor antiguo si existe...
+api-employee-ktor-v2
+🗑 Eliminando imagen antigua si existe...
+Untagged: img-srodenas-api-employee-ktor:v2
+Deleted: sha256:951ef25e229100580a8d4ce1d43abc630a21ee7b64fdda53ddc13793547fc5ee
+📦 Construyendo imagen Docker...
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 6.93kB 0.0s done
+#1 DONE 0.1s
+
+#2 [internal] load metadata for docker.io/arm32v7/eclipse-temurin:17-jdk
+#2 ...
+
+#3 [auth] arm32v7/eclipse-temurin:pull token for registry-1.docker.io
+#3 DONE 0.0s
+
+#4 [internal] load metadata for docker.io/arm32v7/eclipse-temurin:17-jre
+#4 ...
+
+#2 [internal] load metadata for docker.io/arm32v7/eclipse-temurin:17-jdk
+#2 DONE 2.5s
+
+#4 [internal] load metadata for docker.io/arm32v7/eclipse-temurin:17-jre
+#4 DONE 3.3s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 2B 0.0s done
+#5 DONE 0.2s
+
+#6 [stage-1 1/6] FROM docker.io/arm32v7/eclipse-temurin:17-jre@sha256:78f95476ab908044b9b46e1aa4a6ba0166f963654b790c330c34220f2d65483a
+#6 DONE 0.0s
+
+#7 [build  1/14] FROM docker.io/arm32v7/eclipse-temurin:17-jdk@sha256:134388b5b11bf5b43ec1a90e31abcabac603c2eae64b2710f1fb0aae7b255473
+#7 DONE 0.0s
+
+#8 [internal] load build context
+#8 transferring context: 16.02kB 0.2s done
+#8 DONE 0.3s
+
+#9 [build  9/14] RUN ./gradlew dependencies --no-daemon
+#9 CACHED
+
+#10 [build  5/14] RUN wget https://services.gradle.org/distributions/gradle-8.4-bin.zip -O /tmp/gradle.zip     && unzip /tmp/gradle.zip -d /opt/     && ln -s /opt/gradle-8.4/bin/gradle /usr/local/bin/gradle     && rm -rf /tmp/gradle.zip
+#10 CACHED
+
+#11 [build 10/14] COPY upload upload
+#11 CACHED
+
+#12 [build 11/14] RUN chown -R app:app upload && chmod -R 755 upload
+#12 CACHED
+
+#13 [build  4/14] RUN apt-get update && apt-get install -y --no-install-recommends passwd     && rm -rf /var/lib/apt/lists/*     && useradd -r -s /usr/sbin/nologin app
+#13 CACHED
+
+#14 [build  8/14] RUN chmod +x gradlew
+#14 CACHED
+
+#15 [build  2/14] WORKDIR /app
+#15 CACHED
+
+#16 [build  3/14] RUN apt-get update && apt-get install -y wget unzip     && rm -rf /var/lib/apt/lists/*
+#16 CACHED
+
+#17 [build  6/14] COPY build.gradle.kts settings.gradle.kts gradlew gradlew.bat ./
+#17 CACHED
+
+#18 [build  7/14] COPY gradle gradle/
+#18 CACHED
+
+#19 [build 12/14] COPY backend backend
+#19 CACHED
+
+#20 [build 13/14] COPY src src
+#20 DONE 0.7s
+
+#21 [build 14/14] RUN ./gradlew clean installDist --no-daemon
+#21 15.72 To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.4/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+#21 39.11 Daemon will be stopped at the end of the build 
+#21 166.1 > Task :clean UP-TO-DATE
+#21 166.2 > Task :checkKotlinGradlePluginConfigurationErrors SKIPPED
+#21 196.3 > Task :compileKotlin
+#21 392.3 > Task :processResources
+#21 640.4 > Task :compileJava NO-SOURCE
+#21 640.4 > Task :classes
+#21 642.7 > Task :jar
+#21 672.7 > Task :startScripts
+#21 693.2 > Task :installDist
+#21 697.9 
+#21 697.9 BUILD SUCCESSFUL in 11m 35s
+#21 697.9 6 actionable tasks: 5 executed, 1 up-to-date
+#21 DONE 704.7s
+
+#22 [stage-1 2/6] WORKDIR /app
+#22 CACHED
+
+#23 [stage-1 3/6] COPY --from=build /app/build/install/srodenas-sample-employee2/ /app
+#23 DONE 25.9s
+
+#24 [stage-1 4/6] RUN apt-get update && apt-get install -y --no-install-recommends passwd     && rm -rf /var/lib/apt/lists/*     && useradd -r -s /usr/sbin/nologin app
+#24 18.61 Get:1 http://ports.ubuntu.com/ubuntu-ports noble InRelease [256 kB]
+#24 19.45 Get:2 http://ports.ubuntu.com/ubuntu-ports noble-updates InRelease [126 kB]
+#24 19.45 Get:3 http://ports.ubuntu.com/ubuntu-ports noble-backports InRelease [126 kB]
+#24 19.46 Get:4 http://ports.ubuntu.com/ubuntu-ports noble-security InRelease [126 kB]
+#24 20.49 Get:5 http://ports.ubuntu.com/ubuntu-ports noble/restricted armhf Packages [3,815 B]
+#24 20.76 Get:6 http://ports.ubuntu.com/ubuntu-ports noble/universe armhf Packages [18.2 MB]
+#24 34.59 Get:7 http://ports.ubuntu.com/ubuntu-ports noble/main armhf Packages [1,680 kB]
+#24 34.84 Get:8 http://ports.ubuntu.com/ubuntu-ports noble/multiverse armhf Packages [210 kB]
+#24 34.87 Get:9 http://ports.ubuntu.com/ubuntu-ports noble-updates/multiverse armhf Packages [4,792 B]
+#24 34.88 Get:10 http://ports.ubuntu.com/ubuntu-ports noble-updates/universe armhf Packages [1,461 kB]
+#24 35.12 Get:11 http://ports.ubuntu.com/ubuntu-ports noble-updates/restricted armhf Packages [11.3 kB]
+#24 35.12 Get:12 http://ports.ubuntu.com/ubuntu-ports noble-updates/main armhf Packages [937 kB]
+#24 35.21 Get:13 http://ports.ubuntu.com/ubuntu-ports noble-backports/universe armhf Packages [34.6 kB]
+#24 35.22 Get:14 http://ports.ubuntu.com/ubuntu-ports noble-backports/main armhf Packages [49.4 kB]
+#24 35.23 Get:15 http://ports.ubuntu.com/ubuntu-ports noble-security/universe armhf Packages [899 kB]
+#24 35.35 Get:16 http://ports.ubuntu.com/ubuntu-ports noble-security/main armhf Packages [608 kB]
+#24 35.43 Get:17 http://ports.ubuntu.com/ubuntu-ports noble-security/multiverse armhf Packages [3,436 B]
+#24 35.43 Get:18 http://ports.ubuntu.com/ubuntu-ports noble-security/restricted armhf Packages [8,717 B]
+#24 62.50 Fetched 24.7 MB in 44s (560 kB/s)
+#24 62.50 Reading package lists...
+#24 77.37 Reading package lists...
+#24 92.17 Building dependency tree...
+#24 93.93 Reading state information...
+#24 97.70 passwd is already the newest version (1:4.13+dfsg1-4ubuntu3.2).
+#24 97.70 0 upgraded, 0 newly installed, 0 to remove and 1 not upgraded.
+#24 DONE 98.4s
+
+#25 [stage-1 5/6] COPY --from=build /app/upload /upload
+#25 DONE 2.8s
+
+#26 [stage-1 6/6] RUN chown -R app:app /upload
+#26 DONE 1.9s
+
+#27 exporting to image
+#27 exporting layers
+#27 exporting layers 4.3s done
+#27 writing image sha256:57ea0b56545de35bcc7308497dd187fba4b0fcd5ca80fbd82e52272c1560a3a1 0.0s done
+#27 naming to docker.io/library/img-srodenas-api-employee-ktor:v2 0.0s done
+#27 DONE 4.5s
+📤 Lanzando contenedor...
+23fec8a61c13633ac421394d4362dcb31c7c7cb7bcababf9b5abad60cbacb8ea
+✅ Deploy v2 completado. Contenedor corriendo en segundo plano.
+Para ver logs: docker logs -f api-employee-ktor-v2
