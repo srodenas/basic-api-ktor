@@ -6,6 +6,8 @@ import com.domain.models.Employee
 import com.domain.repository.EmployeeInterface
 import com.domain.security.JwtConfig
 import com.ktor.ApplicationContext
+import com.domain.usecase.ProviderUseCase.logger
+
 
 /*
     zona de token.
@@ -23,7 +25,18 @@ class LoginUseCase (val repository : EmployeeInterface){
 
             em!!.token = JwtConfig.generateToken(em.dni)  //genero un nuevo token
             val updateEmployee = em.toUpdateEmployee()  //actualiamos el token del employee
-            if (! updateEmployee.urlImage.isNullOrBlank()){
+            val res = repository.updateEmployee(updateEmployee, dni)  //actualizamos el usuario con el token cambiado.
+            if (res!=null ){
+                if (! updateEmployee.urlImage.isNullOrBlank()){
+                    val local = ApplicationContext.context.environment.config.property("ktor.urlPath.baseUrl").getString()
+                    val relativePath = ApplicationContext.context.environment.config.property("ktor.urlPath.images").getString()
+                    updateEmployee.urlImage = "$local/$relativePath/${updateEmployee.dni}/${updateEmployee.urlImage}"
+                }
+                return updateEmployee.toEmployee()  //devolvemos el employee. El mapping es seguro!!!!.
+            }else
+                return null  //no existe ese usuario
+
+           /* if (! updateEmployee.urlImage.isNullOrBlank()){
                 val local = ApplicationContext.context.environment.config.property("ktor.urlPath.baseUrl").getString()
                 val relativePath = ApplicationContext.context.environment.config.property("ktor.urlPath.images").getString()
                 updateEmployee.urlImage = "$local/$relativePath/${updateEmployee.dni}/${updateEmployee.urlImage}"
@@ -32,7 +45,8 @@ class LoginUseCase (val repository : EmployeeInterface){
             return if (res!=null) //si la actualización ha sido acertada
                 updateEmployee.toEmployee()  //devolvemos el employee. El mapping es seguro!!!!.
             else
-                null
+                null*/
+
         }catch (e: Exception){
             println("Error en login:  ${e.localizedMessage}")
             null

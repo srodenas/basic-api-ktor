@@ -120,7 +120,7 @@ class PersistenceEmployeeRepository: EmployeeInterface {
                     this.isActive = employee.disponible
                     this.token = employee.token
                 }
-            }.toEmployee()
+            }.toEmployee()  //devuelve el objeto mapeado a Employee
 
 
 

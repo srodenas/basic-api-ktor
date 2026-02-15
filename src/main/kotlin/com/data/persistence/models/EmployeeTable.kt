@@ -12,6 +12,23 @@ import org.jetbrains.exposed.dao.id.IntIdTable
  * primaria será de tipo entero y se llamara id.
  */
 
+/*
+Me generaría esto:
+CREATE TABLE Employee (
+    id SERIAL PRIMARY KEY,
+    dni VARCHAR(20) UNIQUE NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    salary VARCHAR(10) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    url_image VARCHAR(255),
+    disponible BOOLEAN NOT NULL DEFAULT TRUE,
+    token VARCHAR(255)
+);
+
+ */
+
 
 object  EmployeeTable: IntIdTable("Employee") {
   //  val id = integer("id").autoIncrement()// Clave primaria
@@ -22,8 +39,9 @@ object  EmployeeTable: IntIdTable("Employee") {
     val salary = varchar("salary", 10)
     val phone = varchar("phone", 20)
     val urlImage = varchar("url_image", 255).nullable()
-    val disponible = bool("disponible")
-    val token = varchar("token", 255).nullable()
+    val disponible = bool("disponible").default(true)
+    val token = text("token").nullable() 
+ //  val token = varchar("token", 255).nullable()
   //  override val primaryKey = PrimaryKey(id)
 
 }
