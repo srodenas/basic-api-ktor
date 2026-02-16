@@ -55,8 +55,16 @@ Método que llamaremos por cada enpoint protegido
 los datos del usuario que hemos pasado en el token.
  */
 suspend fun ApplicationCall.validateToken(token: String): Boolean{
-    val dataUser = this.principal<JWTPrincipal>()  //Recuperamos el usuario autenticado.
+    val dataUser = this.principal<JWTPrincipal>()  //Recuperamos el usuario autenticado.  //principal es un objeto de tipo JWTPrincipal. Usuario autenticado.
     val dni = dataUser?.payload?.getClaim("dni")?.asString()
+
+    /*
+    Si por cualquier motivo, el dni no se encuentra en el Claim, debemos de informar y que no se produzca una excepción.
+     */
+    if (dni.isNullOrBlank()) {
+        this.respond(HttpStatusCode.Unauthorized, "Token inválido: DNI no encontrado")
+        return false
+    }
 
     val user = ProviderUseCase.getEmployeeByDni(dni!!)
     if (user == null || token != user.token){

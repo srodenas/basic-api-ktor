@@ -38,9 +38,9 @@ con **401 Unauthorized** y un header `WWW-Authenticate` con el `realm`.
  */
 object JwtConfig {
     private const val secret = "super_secret_key"  // 🔑 Cambia esto por algo más seguro
-    private const val issuer = "domain.com"
-    private const val audience = "ktor_audience"
-    private const val realm = "ktor_realm"
+    private const val issuer = "domain.com"  //Es quíen genera el token. En este caso, es el propio backend.
+    private const val audience = "ktor_audience"  //Es quíen va a consumir este token, que en este caso es la misma api.
+    private const val realm = "ktor_realm"  //Es el mensaje que se añade cuando no tiene autenticación. 401. Necesitas acceso a ktor_realm
     private val algorithm = Algorithm.HMAC256(secret)
 
     /*
@@ -51,8 +51,8 @@ object JwtConfig {
             .withIssuer(issuer)
             .withAudience(audience)
             .withSubject("Authentication")
-            .withClaim("dni", dni) //son específicas del usuario.
-            .withClaim("time", System.currentTimeMillis()) //específicas del usuario.
+            .withClaim("dni", dni) //son específicas del usuario.  Lo utilizamos para extraer datos del usuario
+            .withClaim("time", System.currentTimeMillis()) //específicas del usuario. Lo utilizamos para extraer datos del usuario.
            // .withExpiresAt(Date(System.currentTimeMillis() + 600000))  // Expira en 10 min
             .sign(algorithm)
     }
@@ -74,16 +74,21 @@ object JwtConfig {
     4.- Se crea un objeto JWTPrincipal, con información del usuario extraída del token
      */
     fun configureAuthentication(config: JWTAuthenticationProvider.Config) {
-        config.realm = realm
-        config.verifier(
-            JWT.require(algorithm)
-                .withIssuer(issuer)
-                .withAudience(audience)
-                .build()
+        config.realm = realm    //El token, en caso de que no pase la verificación, debe añadir información.
+
+        //Aquí, se verifica el token. Si cualquiera de estas comprobaciones falla, se rechaza el token. 401
+        config.verifier(                //Para su verificación, necesitamos que haga unas comprobaciones:
+            JWT.require(algorithm)      //Necesita que el token sea firmado por el algoritmo y la clave privada.
+                .withIssuer(issuer)     //Necesita que incluya quien creó el token, este mismo backend.
+                .withAudience(audience) //Necesita que incluya, para quién va destinado el token que es esta misma api.
+                .build()                //Crea el verificador final, que hará la comprobación de validación.
         )
+
+        //Después de verificar que el token es correcto, se debe pasar al validador del token:
+        //Si al extraer el dni como dato del usuario que incluye el token, es null, entonces se devuelve null y no se puede validar. 401
         config.validate { credential ->
-            if (credential.payload.getClaim("dni").asString() != null) {
-                JWTPrincipal(credential.payload)
+            if (credential.payload.getClaim("dni").asString() != null) {  //Extraemos el dni que es la información del usuario.
+                JWTPrincipal(credential.payload)    //Se crea un objeto que representa la autenticación del usuario, con los datos del usuario dni.
             } else null
         }
     }
