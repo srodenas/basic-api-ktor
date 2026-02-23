@@ -1,3 +1,4 @@
+USE dbEmployee;
 CREATE TABLE Employee (
                           id INT AUTO_INCREMENT PRIMARY KEY,
                           dni VARCHAR(20) UNIQUE NOT NULL,

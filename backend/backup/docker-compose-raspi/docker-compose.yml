@@ -1,0 +1,72 @@
+version: "3.8"
+services:
+  api:
+    build:
+      context: ../../../ #context es donde está el código
+      dockerfile: ../../images/Dockerfile  #donde está el Dockerfile
+    image: img-srodenas-api-employee-ktor:v3
+    container_name: api-employee-ktor
+    ports:
+      - "8081:8081"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: "jdbc:mariadb://db:3306/dbEmployee"
+      DATABASE_USER: "santi"
+      DATABASE_PASSWORD: "santi"
+    networks:
+      - ktor-network
+    restart: always
+
+  db:
+    image: ${DB_IMAGE:-mariadb:latest}  # Por defecto usa amd64 o arm según host
+    container_name: ktor-mariadb
+    restart: always
+    ports:
+      - "3306:3306"
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: dbEmployee
+      MYSQL_USER: santi
+      MYSQL_PASSWORD: santi
+      MYSQL_ROOT_PASSWORD: santiago
+    volumes:
+      - ../../dump:/docker-entrypoint-initdb.d
+      - ../../conf:/etc/mysql/conf.d
+      - persistent:/var/lib/mysql
+    networks:
+      - ktor-network
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+      timeout: 5s
+
+  phpmyadmin:
+    image: ${PMA_IMAGE:-phpmyadmin/phpmyadmin}
+    container_name: ktor-phpmyadmin
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:80"
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: santiago
+    networks:
+      - ktor-network
+
+networks:
+  ktor-network:
+    driver: bridge
+
+volumes:
+  persistent:
+
+
+  #---PARA VOLVER A CREAR LA BBDD, PONER LA OPCIÓN -v. Esto fuerza a eliminar /var/lib/mysql/file-bbdd-mysql
+  #docker-compose down -v    #para que borre también los volúmenes en el caso de que quiera volver a lanzarlo.
+  #docker-compose up -d  --build   #para levantarlos, pero que construya antes la de la api.

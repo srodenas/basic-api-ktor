@@ -63,5 +63,6 @@ networks:
 volumes:
     persistent:
 
+    #---PARA VOLVER A CREAR LA BBDD, PONER LA OPCIÓN -v. Esto fuerza a eliminar /var/lib/mysql/file-bbdd-mysql
     #docker-compose down -v    #para que borre también los volúmenes en el caso de que quiera volver a lanzarlo.
     #docker-compose up -d  --build   #para levantarlos, pero que construya antes la de la api.

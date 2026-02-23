@@ -1,0 +1,27 @@
+services:
+    api:
+        image: img-srodenas-api-employee-ktor:v2
+        build:
+            context: ..
+        container_name: api-employee-ktor-v2
+        ports:
+            - "8082:8081"   # Mapeo el puerto 8082 de la raspi al puerto interno del contenedor 8081.
+            #Para todas las versiones de la api, el puerto interno será el mismo 8081.
+
+        environment:
+            DATABASE_URL: "jdbc:mariadb://db:3306/dbEmployee"
+            DATABASE_USER: "santi"
+            DATABASE_PASSWORD: "santi"
+        networks:
+            - ktor-network
+        restart: always # Queremos que se inice automaticamente al reinicio.
+
+networks:
+    ktor-network:
+        external:
+            name: backend_ktor-network
+        # No crees la red. Utiliza la que ya existe.
+
+
+    #docker-compose down -v  para que borre también los volúmenes en el caso de que quiera volver a lanzarlo.
+    #docker-compose up -d
